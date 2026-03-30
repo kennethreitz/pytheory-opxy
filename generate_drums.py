@@ -13,7 +13,7 @@ import numpy as np
 from pytheory.rhythm import DrumSound
 from pytheory.play import _render_drum_hit, SAMPLE_RATE
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "opxy-samples", "drums")
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "opxy-samples", "pytheory-drums")
 HIT_DURATION = 0.5  # seconds per drum hit
 
 

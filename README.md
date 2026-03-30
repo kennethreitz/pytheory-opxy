@@ -7,7 +7,7 @@ Synthesized instrument and drum presets for the **Teenage Engineering OP-XY** an
 1. [Download the zip](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) of this repo.
 2. Copy the folders to your device:
 
-**OP-XY** — copy `opxy-samples/pytheory/` and `opxy-samples/drums/` into `/presets/` on the device.
+**OP-XY** — copy `opxy-samples/pytheory/` and `opxy-samples/pytheory-drums/` into `/presets/` on the device.
 
 **OP-1 / OP-1 Field** — copy the `.wav` files from `op1-samples/pytheory/` into `/synth/user/` on the device.
 
