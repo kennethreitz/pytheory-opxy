@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "pytheory-opxy"
+version = "0.1.0"
+description = "Generate OP-XY instrument presets from PyTheory's synth library"
+requires-python = ">=3.10"
+dependencies = [
+    "pytheory",
+    "numpy",
+    "scipy",
+]
+
+[project.scripts]
+pytheory-opxy = "generate:main"
