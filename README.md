@@ -25,6 +25,8 @@ Every sound is rendered from scratch — no samples were harmed in the making of
 | **OP-XY** | `opxy-samples/pytheory-drums/` | `/presets/pytheory-drums/` |
 | **OP-1 / OP-1 Field** | `op1-samples/pytheory/*.wav` | `/synth/user/` |
 
+OP-XY users: [Field Kit](https://teenage.engineering/apps/field-kit) makes managing presets easy.
+
 ---
 
 ## Instruments
