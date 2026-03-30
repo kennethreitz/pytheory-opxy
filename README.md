@@ -37,8 +37,8 @@ Each `.preset` folder contains:
 ### OP-XY
 
 1. Connect your OP-XY to your computer via USB-C (MTP mode).
-2. Copy the `.preset` folders from `pytheory/` into `/presets/user/` on the device.
-3. The presets will appear in the OP-XY's preset browser under **User**.
+2. Copy the `pytheory/` folder into `/presets/` on the device (so presets live at `/presets/pytheory/`).
+3. The presets will appear in the OP-XY's preset browser.
 
 ### OP-1 / OP-1 Field
 
