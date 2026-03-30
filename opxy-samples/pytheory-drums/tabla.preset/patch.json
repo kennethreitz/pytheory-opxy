@@ -95,7 +95,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "na.wav",
+      "sample": "ge.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tin.wav",
+      "sample": "ge_bend.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "ge.wav",
+      "sample": "ke.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -155,7 +155,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tit.wav",
+      "sample": "na.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -170,7 +170,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "ke.wav",
+      "sample": "tin.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -185,7 +185,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "ge_bend.wav",
+      "sample": "tit.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

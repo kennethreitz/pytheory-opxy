@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "slap.wav",
+      "sample": "tap.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tap.wav",
+      "sample": "slap.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

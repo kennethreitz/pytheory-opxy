@@ -20,98 +20,106 @@ HIT_DURATION = 0.5  # seconds per drum hit
 # ── Drum kits: name -> list of (DrumSound, display_name) ─────────────────────
 
 KITS = {
+    # GM-style layout: kick, snare/rim/clap, hats, toms, cymbals, percussion
     "standard": [
-        (DrumSound.KICK, "kick"),
-        (DrumSound.SNARE, "snare"),
-        (DrumSound.RIMSHOT, "rimshot"),
-        (DrumSound.CLAP, "clap"),
-        (DrumSound.CLOSED_HAT, "cl_hat"),
-        (DrumSound.OPEN_HAT, "op_hat"),
-        (DrumSound.PEDAL_HAT, "pd_hat"),
-        (DrumSound.LOW_TOM, "lo_tom"),
-        (DrumSound.MID_TOM, "mid_tom"),
-        (DrumSound.HIGH_TOM, "hi_tom"),
-        (DrumSound.CRASH, "crash"),
-        (DrumSound.RIDE, "ride"),
-        (DrumSound.RIDE_BELL, "ride_bell"),
-        (DrumSound.COWBELL, "cowbell"),
-        (DrumSound.CLAVE, "clave"),
-        (DrumSound.SHAKER, "shaker"),
-        (DrumSound.TAMBOURINE, "tamb"),
-        (DrumSound.CONGA_HIGH, "conga_hi"),
-        (DrumSound.CONGA_LOW, "conga_lo"),
-        (DrumSound.BONGO_HIGH, "bongo_hi"),
-        (DrumSound.BONGO_LOW, "bongo_lo"),
-        (DrumSound.TIMBALE_HIGH, "timbal_hi"),
-        (DrumSound.TIMBALE_LOW, "timbal_lo"),
-        (DrumSound.GUIRO, "guiro"),
+        (DrumSound.KICK, "kick"),          # 53
+        (DrumSound.RIMSHOT, "rimshot"),     # 54
+        (DrumSound.SNARE, "snare"),        # 55
+        (DrumSound.CLAP, "clap"),          # 56
+        (DrumSound.PEDAL_HAT, "pd_hat"),   # 57
+        (DrumSound.CLOSED_HAT, "cl_hat"),  # 58
+        (DrumSound.OPEN_HAT, "op_hat"),    # 59
+        (DrumSound.LOW_TOM, "lo_tom"),     # 60
+        (DrumSound.MID_TOM, "mid_tom"),    # 61
+        (DrumSound.HIGH_TOM, "hi_tom"),    # 62
+        (DrumSound.CRASH, "crash"),        # 63
+        (DrumSound.RIDE, "ride"),          # 64
+        (DrumSound.RIDE_BELL, "ride_bell"),# 65
+        (DrumSound.TAMBOURINE, "tamb"),    # 66
+        (DrumSound.COWBELL, "cowbell"),     # 67
+        (DrumSound.CLAVE, "clave"),        # 68
+        (DrumSound.SHAKER, "shaker"),      # 69
+        (DrumSound.CONGA_LOW, "conga_lo"), # 70
+        (DrumSound.CONGA_HIGH, "conga_hi"),# 71
+        (DrumSound.BONGO_LOW, "bongo_lo"), # 72
+        (DrumSound.BONGO_HIGH, "bongo_hi"),# 73
+        (DrumSound.TIMBALE_LOW, "timbal_lo"),# 74
+        (DrumSound.TIMBALE_HIGH, "timbal_hi"),# 75
+        (DrumSound.GUIRO, "guiro"),        # 76
     ],
     "latin": [
         (DrumSound.KICK, "kick"),
-        (DrumSound.SNARE, "snare"),
         (DrumSound.RIMSHOT, "rimshot"),
+        (DrumSound.SNARE, "snare"),
         (DrumSound.CLAP, "clap"),
         (DrumSound.CLOSED_HAT, "cl_hat"),
         (DrumSound.OPEN_HAT, "op_hat"),
-        (DrumSound.CONGA_HIGH, "conga_hi"),
         (DrumSound.CONGA_LOW, "conga_lo"),
-        (DrumSound.BONGO_HIGH, "bongo_hi"),
+        (DrumSound.CONGA_HIGH, "conga_hi"),
         (DrumSound.BONGO_LOW, "bongo_lo"),
-        (DrumSound.TIMBALE_HIGH, "timbal_hi"),
+        (DrumSound.BONGO_HIGH, "bongo_hi"),
         (DrumSound.TIMBALE_LOW, "timbal_lo"),
-        (DrumSound.AGOGO_HIGH, "agogo_hi"),
+        (DrumSound.TIMBALE_HIGH, "timbal_hi"),
         (DrumSound.AGOGO_LOW, "agogo_lo"),
-        (DrumSound.GUIRO, "guiro"),
+        (DrumSound.AGOGO_HIGH, "agogo_hi"),
+        (DrumSound.COWBELL, "cowbell"),
         (DrumSound.CLAVE, "clave"),
+        (DrumSound.GUIRO, "guiro"),
         (DrumSound.SHAKER, "shaker"),
         (DrumSound.TAMBOURINE, "tamb"),
-        (DrumSound.COWBELL, "cowbell"),
         (DrumSound.CABASA, "cabasa"),
     ],
+    # Tabla: bass (bayan) first, then treble (dayan), low to high
     "tabla": [
+        (DrumSound.TABLA_GE, "ge"),
+        (DrumSound.TABLA_GE_BEND, "ge_bend"),
+        (DrumSound.TABLA_KE, "ke"),
+        (DrumSound.TABLA_DHA, "dha"),
         (DrumSound.TABLA_NA, "na"),
         (DrumSound.TABLA_TIN, "tin"),
-        (DrumSound.TABLA_GE, "ge"),
-        (DrumSound.TABLA_DHA, "dha"),
         (DrumSound.TABLA_TIT, "tit"),
-        (DrumSound.TABLA_KE, "ke"),
-        (DrumSound.TABLA_GE_BEND, "ge_bend"),
     ],
+    # Dhol/Dholak: bass side first, then treble
     "dhol": [
         (DrumSound.DHOL_DAGGA, "dagga"),
-        (DrumSound.DHOL_TILLI, "tilli"),
         (DrumSound.DHOL_BOTH, "both"),
+        (DrumSound.DHOL_TILLI, "tilli"),
         (DrumSound.DHOLAK_GE, "dholak_ge"),
         (DrumSound.DHOLAK_NA, "dholak_na"),
         (DrumSound.DHOLAK_TIT, "dholak_tit"),
     ],
+    # Mridangam: bass first, then treble
     "mridangam": [
         (DrumSound.MRIDANGAM_THAM, "tham"),
-        (DrumSound.MRIDANGAM_NAM, "nam"),
-        (DrumSound.MRIDANGAM_DIN, "din"),
         (DrumSound.MRIDANGAM_THA, "tha"),
+        (DrumSound.MRIDANGAM_DIN, "din"),
+        (DrumSound.MRIDANGAM_NAM, "nam"),
     ],
+    # Djembe: bass, tone, slap (low to high)
     "djembe": [
         (DrumSound.DJEMBE_BASS, "bass"),
         (DrumSound.DJEMBE_TONE, "tone"),
         (DrumSound.DJEMBE_SLAP, "slap"),
     ],
+    # Doumbek: bass, tone, slap (low to high)
     "doumbek": [
         (DrumSound.DOUMBEK_DUM, "dum"),
         (DrumSound.DOUMBEK_TEK, "tek"),
         (DrumSound.DOUMBEK_KA, "ka"),
     ],
+    # Cajón: bass, tap, slap, snare (low to high)
     "cajon": [
         (DrumSound.CAJON_BASS, "bass"),
-        (DrumSound.CAJON_SLAP, "slap"),
         (DrumSound.CAJON_TAP, "tap"),
+        (DrumSound.CAJON_SLAP, "slap"),
         (DrumSound.CAJON_SLAP_SNARE, "slap_snare"),
     ],
+    # Metal: kick, snares, hats, toms, cymbals
     "metal": [
         (DrumSound.METAL_KICK, "kick"),
         (DrumSound.METAL_SNARE, "snare"),
-        (DrumSound.METAL_HAT, "hat"),
         (DrumSound.SNARE, "snare2"),
+        (DrumSound.METAL_HAT, "hat"),
         (DrumSound.CLOSED_HAT, "cl_hat"),
         (DrumSound.OPEN_HAT, "op_hat"),
         (DrumSound.LOW_TOM, "lo_tom"),
@@ -121,22 +129,24 @@ KITS = {
         (DrumSound.RIDE, "ride"),
         (DrumSound.RIDE_BELL, "ride_bell"),
     ],
+    # Marching: bass drums (low to high), snares, quads (low to high), crash
     "marching": [
+        (DrumSound.BASS_5, "bass_5"),
+        (DrumSound.BASS_4, "bass_4"),
+        (DrumSound.BASS_3, "bass_3"),
+        (DrumSound.BASS_2, "bass_2"),
+        (DrumSound.BASS_1, "bass_1"),
         (DrumSound.MARCH_SNARE, "snare"),
         (DrumSound.MARCH_RIMSHOT, "rimshot"),
         (DrumSound.MARCH_CLICK, "click"),
-        (DrumSound.QUAD_1, "quad_1"),
-        (DrumSound.QUAD_2, "quad_2"),
-        (DrumSound.QUAD_3, "quad_3"),
         (DrumSound.QUAD_4, "quad_4"),
+        (DrumSound.QUAD_3, "quad_3"),
+        (DrumSound.QUAD_2, "quad_2"),
+        (DrumSound.QUAD_1, "quad_1"),
         (DrumSound.QUAD_SPOCK, "spock"),
-        (DrumSound.BASS_1, "bass_1"),
-        (DrumSound.BASS_2, "bass_2"),
-        (DrumSound.BASS_3, "bass_3"),
-        (DrumSound.BASS_4, "bass_4"),
-        (DrumSound.BASS_5, "bass_5"),
         (DrumSound.CRASH, "crash"),
     ],
+    # World: hand drums (low to high), then aux percussion
     "world": [
         (DrumSound.DJEMBE_BASS, "djembe_bas"),
         (DrumSound.DJEMBE_TONE, "djembe_ton"),
@@ -145,11 +155,11 @@ KITS = {
         (DrumSound.DOUMBEK_TEK, "doumbek_tk"),
         (DrumSound.DOUMBEK_KA, "doumbek_ka"),
         (DrumSound.CAJON_BASS, "cajon_bass"),
-        (DrumSound.CAJON_SLAP, "cajon_slap"),
         (DrumSound.CAJON_TAP, "cajon_tap"),
-        (DrumSound.FINGER_CYMBAL, "fngr_cymbl"),
-        (DrumSound.CABASA, "cabasa"),
+        (DrumSound.CAJON_SLAP, "cajon_slap"),
         (DrumSound.SHAKER, "shaker"),
+        (DrumSound.CABASA, "cabasa"),
+        (DrumSound.FINGER_CYMBAL, "fngr_cymbl"),
         (DrumSound.RAINSTICK, "rainstick"),
         (DrumSound.OCEAN_DRUM, "ocean_drum"),
         (DrumSound.WIND_CHIMES, "wnd_chimes"),

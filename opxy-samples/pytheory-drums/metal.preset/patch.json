@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "hat.wav",
+      "sample": "snare2.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -140,7 +140,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "snare2.wav",
+      "sample": "hat.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

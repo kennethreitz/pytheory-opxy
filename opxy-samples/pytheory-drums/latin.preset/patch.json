@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "snare.wav",
+      "sample": "rimshot.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "rimshot.wav",
+      "sample": "snare.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -185,7 +185,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "conga_hi.wav",
+      "sample": "conga_lo.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -200,7 +200,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "conga_lo.wav",
+      "sample": "conga_hi.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -215,7 +215,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bongo_hi.wav",
+      "sample": "bongo_lo.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -230,7 +230,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bongo_lo.wav",
+      "sample": "bongo_hi.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -245,7 +245,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "timbal_hi.wav",
+      "sample": "timbal_lo.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -260,7 +260,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "timbal_lo.wav",
+      "sample": "timbal_hi.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -275,7 +275,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "agogo_hi.wav",
+      "sample": "agogo_lo.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -290,7 +290,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "agogo_lo.wav",
+      "sample": "agogo_hi.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -305,7 +305,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "guiro.wav",
+      "sample": "cowbell.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -335,7 +335,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "shaker.wav",
+      "sample": "guiro.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -350,7 +350,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tamb.wav",
+      "sample": "shaker.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -365,7 +365,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "cowbell.wav",
+      "sample": "tamb.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

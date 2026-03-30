@@ -200,7 +200,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "cajon_slap.wav",
+      "sample": "cajon_tap.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -215,7 +215,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "cajon_tap.wav",
+      "sample": "cajon_slap.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -230,7 +230,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "fngr_cymbl.wav",
+      "sample": "shaker.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -260,7 +260,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "shaker.wav",
+      "sample": "fngr_cymbl.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tilli.wav",
+      "sample": "both.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "both.wav",
+      "sample": "tilli.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

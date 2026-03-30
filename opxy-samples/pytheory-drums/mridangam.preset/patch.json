@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "nam.wav",
+      "sample": "tha.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -140,7 +140,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tha.wav",
+      "sample": "nam.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0

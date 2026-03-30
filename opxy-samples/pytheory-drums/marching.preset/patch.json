@@ -95,7 +95,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "snare.wav",
+      "sample": "bass_5.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -110,7 +110,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "rimshot.wav",
+      "sample": "bass_4.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -125,7 +125,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "click.wav",
+      "sample": "bass_3.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -140,7 +140,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "quad_1.wav",
+      "sample": "bass_2.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -155,7 +155,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "quad_2.wav",
+      "sample": "bass_1.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -170,7 +170,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "quad_3.wav",
+      "sample": "snare.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -185,7 +185,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "quad_4.wav",
+      "sample": "rimshot.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -200,7 +200,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "spock.wav",
+      "sample": "click.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -215,7 +215,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bass_1.wav",
+      "sample": "quad_4.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -230,7 +230,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bass_2.wav",
+      "sample": "quad_3.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -245,7 +245,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bass_3.wav",
+      "sample": "quad_2.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -260,7 +260,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bass_4.wav",
+      "sample": "quad_1.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -275,7 +275,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bass_5.wav",
+      "sample": "spock.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
