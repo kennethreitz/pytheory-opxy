@@ -16,7 +16,7 @@ Every sound is rendered from scratch — no samples were harmed in the making of
 
 ## Quick Start
 
-1. [**Download the zip**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip)
+1. [**Download the zip**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) (~130 MB)
 2. Copy to your device:
 
 | Device | What to copy | Where to put it |
