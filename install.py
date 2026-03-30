@@ -10,6 +10,7 @@ import shutil
 import sys
 
 PRESET_DIR = os.path.join(os.path.dirname(__file__), "pytheory")
+DRUMS_DIR = os.path.join(os.path.dirname(__file__), "drums")
 
 # Common mount points to search for OP-XY / OP-1
 SEARCH_PATHS = [
@@ -51,19 +52,16 @@ def find_device():
     return None
 
 
-def install_opxy(device_root):
-    """Copy .preset folders to /presets/pytheory/ on the device."""
-    dest = os.path.join(device_root, "presets", "pytheory")
+def _copy_presets(src_dir, dest):
+    """Copy all .preset folders from src_dir to dest."""
     os.makedirs(dest, exist_ok=True)
 
     presets = sorted(
-        d for d in os.listdir(PRESET_DIR) if d.endswith(".preset")
+        d for d in os.listdir(src_dir) if d.endswith(".preset")
     )
 
-    print(f"Installing {len(presets)} presets to {dest}/\n")
-
     for name in presets:
-        src = os.path.join(PRESET_DIR, name)
+        src = os.path.join(src_dir, name)
         dst = os.path.join(dest, name)
 
         if os.path.exists(dst):
@@ -73,7 +71,23 @@ def install_opxy(device_root):
         label = name.replace(".preset", "")
         print(f"  {label}")
 
-    print(f"\nDone. {len(presets)} presets installed to {dest}/")
+    return len(presets)
+
+
+def install_opxy(device_root):
+    """Copy instrument and drum presets to the device."""
+    # Instruments
+    dest = os.path.join(device_root, "presets", "pytheory")
+    print(f"Installing instruments to {dest}/\n")
+    n = _copy_presets(PRESET_DIR, dest)
+    print(f"\n  {n} instrument presets installed.\n")
+
+    # Drums
+    if os.path.isdir(DRUMS_DIR):
+        dest = os.path.join(device_root, "presets", "drums")
+        print(f"Installing drum kits to {dest}/\n")
+        n = _copy_presets(DRUMS_DIR, dest)
+        print(f"\n  {n} drum kits installed.")
 
 
 def install_op1(device_root):

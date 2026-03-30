@@ -15,7 +15,29 @@ from pytheory import Tone, Score
 from pytheory.play import render_score, SAMPLE_RATE
 from pytheory.rhythm import INSTRUMENTS, Duration
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "pytheory")
+OPXY_DIR = os.path.join(os.path.dirname(__file__), "opxy-samples", "pytheory")
+OP1_DIR = os.path.join(os.path.dirname(__file__), "op1-samples", "pytheory")
+
+# Instruments that should be monophonic/legato (not polyphonic)
+MONO_INSTRUMENTS = {
+    # Monophonic by nature
+    "theremin", "flute", "clarinet", "oboe", "bassoon", "trumpet",
+    "trombone", "french_horn", "tuba", "saxophone", "alto_sax",
+    "tenor_sax", "bari_sax", "didgeridoo", "bagpipe",
+    # Bass instruments — typically mono
+    "bass_guitar", "upright_bass", "synth_bass", "acid_bass", "808_bass",
+    "contrabass",
+    # Lead synths
+    "synth_lead", "vocal",
+}
+
+# Instruments that sound best with oneshot (short percussive, no sustain)
+ONESHOT_INSTRUMENTS = {
+    "marimba", "xylophone", "glockenspiel",
+    "timpani", "kalimba", "steel_drum", "celesta", "music_box",
+    "harp", "koto", "banjo", "mandolin", "mandola", "ukulele",
+    "acoustic_guitar", "harpsichord",
+}
 
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
@@ -61,14 +83,21 @@ def save_wav(path: str, samples: np.ndarray):
         wf.writeframes(pcm.tobytes())
 
 
-def build_regions(sample_files):
+def _region_playmode(instrument_name: str) -> str:
+    """Return the OP-XY region playmode for an instrument."""
+    if instrument_name in ONESHOT_INSTRUMENTS:
+        return "oneshot"
+    return "gate"
+
+
+def build_regions(sample_files, instrument_name: str):
     """Build OP-XY multisampler regions from a list of (filename, midi_note, framecount).
 
     Key ranges are split at midpoints between adjacent sample points.
     """
+    playmode = _region_playmode(instrument_name)
     regions = []
     for i, (filename, midi, framecount) in enumerate(sample_files):
-        # Calculate key range: midpoint to previous, midpoint to next
         if i == 0:
             lokey = 0
         else:
@@ -94,7 +123,7 @@ def build_regions(sample_files):
             "loop.start": 0,
             "pan": 0,
             "pitch.keycenter": midi,
-            "playmode": "oneshot",
+            "playmode": playmode,
             "reverse": False,
             "sample": filename,
             "sample.end": framecount,
@@ -105,7 +134,14 @@ def build_regions(sample_files):
     return regions
 
 
-def make_patch_json(regions: list) -> dict:
+def _engine_playmode(instrument_name: str) -> str:
+    """Return the OP-XY engine playmode for an instrument."""
+    if instrument_name in MONO_INSTRUMENTS:
+        return "mono"
+    return "poly"
+
+
+def make_patch_json(regions: list, instrument_name: str) -> dict:
     """Build an OP-XY multisampler patch.json."""
     return {
         "engine": {
@@ -118,7 +154,7 @@ def make_patch_json(regions: list) -> dict:
                 "velocity": {"amount": 16383, "target": 0},
             },
             "params": [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384],
-            "playmode": "poly",
+            "playmode": _engine_playmode(instrument_name),
             "portamento.amount": 0,
             "portamento.type": 32767,
             "transpose": 0,
@@ -175,8 +211,8 @@ def generate_preset(name: str, output_dir: str):
         sample_files.append((wav_name, midi, framecount))
         total_kb += os.path.getsize(wav_path) / 1024
 
-    regions = build_regions(sample_files)
-    patch = make_patch_json(regions)
+    regions = build_regions(sample_files, name)
+    patch = make_patch_json(regions, name)
 
     with open(os.path.join(preset_dir, "patch.json"), "w") as f:
         json.dump(patch, f, indent=2)
@@ -184,19 +220,41 @@ def generate_preset(name: str, output_dir: str):
     print(f"  {name:24s}  {len(SAMPLE_POINTS)} samples  ({total_kb:.0f} KB)")
 
 
-def main():
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
+def generate_op1_sample(name: str, output_dir: str):
+    """Generate a single A4 WAV for OP-1 sampler."""
+    samples = render_note(name, "A4")
+    wav_path = os.path.join(output_dir, f"{name}.wav")
+    save_wav(wav_path, samples)
+    size_kb = os.path.getsize(wav_path) / 1024
+    print(f"  {name:24s}  ({size_kb:.0f} KB)")
 
+
+def main():
     instruments = sorted(INSTRUMENTS.keys())
-    print(f"Generating {len(instruments)} multisampled OP-XY presets to {OUTPUT_DIR}/\n")
+
+    # OP-XY multisampled presets
+    os.makedirs(OPXY_DIR, exist_ok=True)
+    print(f"Generating {len(instruments)} OP-XY presets to {OPXY_DIR}/\n")
 
     for name in instruments:
         try:
-            generate_preset(name, OUTPUT_DIR)
+            generate_preset(name, OPXY_DIR)
         except Exception as e:
             print(f"  {name:24s} FAILED: {e}")
 
-    print(f"\nDone. {len(instruments)} presets in {OUTPUT_DIR}/")
+    print(f"\nDone. {len(instruments)} OP-XY presets.\n")
+
+    # OP-1 single samples
+    os.makedirs(OP1_DIR, exist_ok=True)
+    print(f"Generating {len(instruments)} OP-1 samples to {OP1_DIR}/\n")
+
+    for name in instruments:
+        try:
+            generate_op1_sample(name, OP1_DIR)
+        except Exception as e:
+            print(f"  {name:24s} FAILED: {e}")
+
+    print(f"\nDone. {len(instruments)} OP-1 samples.")
 
 
 if __name__ == "__main__":
