@@ -31,13 +31,9 @@ MONO_INSTRUMENTS = {
     "synth_lead", "vocal",
 }
 
-# Instruments that sound best with oneshot (short percussive, no sustain)
-ONESHOT_INSTRUMENTS = {
-    "marimba", "xylophone", "glockenspiel",
-    "timpani", "kalimba", "steel_drum", "celesta", "music_box",
-    "harp", "koto", "banjo", "mandolin", "mandola", "ukulele",
-    "acoustic_guitar", "harpsichord",
-}
+# No instruments use oneshot — all use gate with looping so they
+# stop on key release. Oneshot is only for drum kits.
+ONESHOT_INSTRUMENTS = set()
 
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
