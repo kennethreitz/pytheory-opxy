@@ -34,17 +34,29 @@ Each `.preset` folder contains:
 
 ## Installation
 
-### OP-XY
+### Automatic
 
-1. Connect your OP-XY to your computer via USB-C (MTP mode).
-2. Copy the `pytheory/` folder into `/presets/` on the device (so presets live at `/presets/pytheory/`).
-3. The presets will appear in the OP-XY's preset browser.
+Connect your OP-XY or OP-1 and run:
 
-### OP-1 / OP-1 Field
+```
+python install.py
+```
 
-1. Connect your OP-1 via USB and enter disk mode (TE > USB Disk).
-2. Copy the `.wav` files from each preset folder into `/synth/user/` on the device.
-3. Load them into the Sampler synth engine.
+Or specify the mount point directly:
+
+```
+python install.py /Volumes/OP-XY
+```
+
+The script auto-detects the device type and copies presets to the right location:
+- **OP-XY** → `/presets/pytheory/` on the device
+- **OP-1 / OP-1 Field** → `/synth/user/` on the device
+
+### Manual
+
+**OP-XY:** Copy the `pytheory/` folder into `/presets/` on the device (so presets live at `/presets/pytheory/`).
+
+**OP-1 / OP-1 Field:** Copy the `.wav` files from each preset folder into `/synth/user/` on the device, then load them into the Sampler synth engine.
 
 ## Regenerating
 
