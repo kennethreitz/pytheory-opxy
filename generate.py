@@ -110,14 +110,17 @@ def build_regions(sample_files, instrument_name: str):
             next_midi = sample_files[i + 1][1]
             hikey = (midi + next_midi) // 2
 
+        # Gate instruments loop so they sustain while held,
+        # then the amp envelope release handles fade-out.
+        loop = playmode == "gate"
         regions.append({
             "fade.in": 0,
             "fade.out": 0,
             "framecount": framecount,
             "hikey": hikey,
             "lokey": lokey,
-            "loop.crossfade": 0,
-            "loop.enabled": False,
+            "loop.crossfade": 4410,  # ~100ms crossfade for smooth loop
+            "loop.enabled": loop,
             "loop.end": framecount,
             "loop.onrelease": False,
             "loop.start": 0,
@@ -165,7 +168,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             "width": 0,
         },
         "envelope": {
-            "amp": {"attack": 0, "decay": 0, "release": 1000, "sustain": 32767},
+            "amp": {"attack": 0, "decay": 0, "release": 200, "sustain": 32767},
             "filter": {
                 "attack": 0,
                 "decay": 3276,
