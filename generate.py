@@ -73,25 +73,36 @@ def save_wav(path: str, samples: np.ndarray):
 
 
 def build_regions(sample_files):
-    """Build OP-XY multisampler regions matching the factory format.
+    """Build OP-XY sampler regions matching the factory preset format.
 
-    Uses lokey=0 stacking (OP-XY picks the region with the highest
-    hikey that the played note falls under).
+    Key ranges split at midpoints. Loop near the tail of the sample
+    with loop.onrelease=true so notes stop on key release.
     """
     regions = []
-    for filename, midi, framecount in sample_files:
-        # Loop points in the sustain portion of the sample
-        loop_start = framecount // 5
-        loop_end = framecount * 4 // 5
+    for i, (filename, midi, framecount) in enumerate(sample_files):
+        if i == 0:
+            lokey = 0
+        else:
+            prev_midi = sample_files[i - 1][1]
+            lokey = (prev_midi + midi) // 2 + 1
+
+        if i == len(sample_files) - 1:
+            hikey = 127
+        else:
+            next_midi = sample_files[i + 1][1]
+            hikey = (midi + next_midi) // 2
+
+        # Loop near the tail (like factory presets)
+        loop_start = framecount * 9 // 10
+        loop_end = framecount
 
         regions.append({
             "framecount": framecount,
-            "hikey": midi,
-            "lokey": 0,
-            "loop.crossfade": 16,
-            "loop.enabled": False,
+            "hikey": hikey,
+            "lokey": lokey,
+            "loop.crossfade": max(1, framecount // 100),
             "loop.end": loop_end,
-            "loop.onrelease": False,
+            "loop.onrelease": True,
             "loop.start": loop_start,
             "pitch.keycenter": midi,
             "reverse": False,
@@ -150,7 +161,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
         "octave": 0,
         "platform": "OP-XY",
         "regions": regions,
-        "type": "multisampler",
+        "type": "sampler",
         "version": 4,
     }
 
