@@ -58,7 +58,7 @@ def save_wav(path: str, samples: np.ndarray):
 
 
 def make_patch_json(sample_filename: str, framecount: int) -> dict:
-    """Build an OP-XY synth sampler patch.json."""
+    """Build an OP-XY multisampler patch.json."""
     return {
         "engine": {
             "bendrange": 8191,
@@ -108,6 +108,11 @@ def make_patch_json(sample_filename: str, framecount: int) -> dict:
                 "framecount": framecount,
                 "hikey": 127,
                 "lokey": 0,
+                "loop.crossfade": 0,
+                "loop.enabled": False,
+                "loop.end": framecount,
+                "loop.onrelease": False,
+                "loop.start": 0,
                 "pan": 0,
                 "pitch.keycenter": 69,  # MIDI A4
                 "playmode": "oneshot",
@@ -118,7 +123,7 @@ def make_patch_json(sample_filename: str, framecount: int) -> dict:
                 "tune": 0,
             }
         ],
-        "type": "sample",
+        "type": "multisampler",
         "version": 4,
     }
 

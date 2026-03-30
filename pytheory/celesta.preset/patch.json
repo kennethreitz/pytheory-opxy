@@ -91,6 +91,11 @@
       "framecount": 132300,
       "hikey": 127,
       "lokey": 0,
+      "loop.crossfade": 0,
+      "loop.enabled": false,
+      "loop.end": 132300,
+      "loop.onrelease": false,
+      "loop.start": 0,
       "pan": 0,
       "pitch.keycenter": 69,
       "playmode": "oneshot",
@@ -101,6 +106,6 @@
       "tune": 0
     }
   ],
-  "type": "sample",
+  "type": "multisampler",
   "version": 4
 }
