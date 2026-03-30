@@ -1,8 +1,8 @@
 """Generate OP-XY multisampler .preset folders for every PyTheory instrument.
 
-Each preset contains samples at C2, C3, C4, A4, C5, C6 with key ranges
-split at the midpoints between samples. The OP-XY transposes from the
-nearest sample when you play other keys.
+Each preset contains samples at C2, C3, C4, A4, C5, C6. Uses the real
+OP-XY multisampler format with lokey=0 stacking and amp envelope for
+sustain/release behavior.
 """
 
 import json
@@ -18,22 +18,15 @@ from pytheory.rhythm import INSTRUMENTS, Duration
 OPXY_DIR = os.path.join(os.path.dirname(__file__), "opxy-samples", "pytheory")
 OP1_DIR = os.path.join(os.path.dirname(__file__), "op1-samples", "pytheory")
 
-# Instruments that should be monophonic/legato (not polyphonic)
+# Instruments that should be monophonic (not polyphonic)
 MONO_INSTRUMENTS = {
-    # Monophonic by nature
     "theremin", "flute", "clarinet", "oboe", "bassoon", "trumpet",
     "trombone", "french_horn", "tuba", "saxophone", "alto_sax",
     "tenor_sax", "bari_sax", "didgeridoo", "bagpipe",
-    # Bass instruments — typically mono
     "bass_guitar", "upright_bass", "synth_bass", "acid_bass", "808_bass",
     "contrabass",
-    # Lead synths
     "synth_lead", "vocal",
 }
-
-# No instruments use oneshot — all use gate with looping so they
-# stop on key release. Oneshot is only for drum kits.
-ONESHOT_INSTRUMENTS = set()
 
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
@@ -79,69 +72,41 @@ def save_wav(path: str, samples: np.ndarray):
         wf.writeframes(pcm.tobytes())
 
 
-def _region_playmode(instrument_name: str) -> str:
-    """Return the OP-XY region playmode for an instrument."""
-    if instrument_name in ONESHOT_INSTRUMENTS:
-        return "oneshot"
-    return "gate"
+def build_regions(sample_files):
+    """Build OP-XY multisampler regions matching the factory format.
 
-
-def build_regions(sample_files, instrument_name: str):
-    """Build OP-XY multisampler regions from a list of (filename, midi_note, framecount).
-
-    Key ranges are split at midpoints between adjacent sample points.
+    Uses lokey=0 stacking (OP-XY picks the region with the highest
+    hikey that the played note falls under).
     """
-    playmode = _region_playmode(instrument_name)
     regions = []
-    for i, (filename, midi, framecount) in enumerate(sample_files):
-        if i == 0:
-            lokey = 0
-        else:
-            prev_midi = sample_files[i - 1][1]
-            lokey = (prev_midi + midi) // 2 + 1
+    for filename, midi, framecount in sample_files:
+        # Loop points in the sustain portion of the sample
+        loop_start = framecount // 5
+        loop_end = framecount * 4 // 5
 
-        if i == len(sample_files) - 1:
-            hikey = 127
-        else:
-            next_midi = sample_files[i + 1][1]
-            hikey = (midi + next_midi) // 2
-
-        # Gate instruments loop so they sustain while held,
-        # then the amp envelope release handles fade-out.
-        loop = playmode == "gate"
         regions.append({
-            "fade.in": 0,
-            "fade.out": 0,
             "framecount": framecount,
-            "hikey": hikey,
-            "lokey": lokey,
-            "loop.crossfade": 4410,  # ~100ms crossfade for smooth loop
-            "loop.enabled": loop,
-            "loop.end": framecount,
+            "hikey": midi,
+            "lokey": 0,
+            "loop.crossfade": 16,
+            "loop.enabled": False,
+            "loop.end": loop_end,
             "loop.onrelease": False,
-            "loop.start": 0,
-            "pan": 0,
+            "loop.start": loop_start,
             "pitch.keycenter": midi,
-            "playmode": playmode,
             "reverse": False,
             "sample": filename,
             "sample.end": framecount,
-            "transpose": 0,
             "tune": 0,
         })
 
     return regions
 
 
-def _engine_playmode(instrument_name: str) -> str:
-    """Return the OP-XY engine playmode for an instrument."""
-    if instrument_name in MONO_INSTRUMENTS:
-        return "mono"
-    return "poly"
-
-
 def make_patch_json(regions: list, instrument_name: str) -> dict:
-    """Build an OP-XY multisampler patch.json."""
+    """Build an OP-XY multisampler patch.json matching factory format."""
+    playmode = "mono" if instrument_name in MONO_INSTRUMENTS else "poly"
+
     return {
         "engine": {
             "bendrange": 8191,
@@ -153,28 +118,28 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
                 "velocity": {"amount": 16383, "target": 0},
             },
             "params": [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384],
-            "playmode": _engine_playmode(instrument_name),
+            "playmode": playmode,
             "portamento.amount": 0,
             "portamento.type": 32767,
             "transpose": 0,
             "tuning.root": 0,
             "tuning.scale": 0,
-            "velocity.sensitivity": 19660,
-            "volume": 18348,
+            "velocity.sensitivity": 26541,
+            "volume": 20082,
             "width": 0,
         },
         "envelope": {
-            "amp": {"attack": 0, "decay": 0, "release": 200, "sustain": 32767},
+            "amp": {"attack": 0, "decay": 2457, "release": 7841, "sustain": 32767},
             "filter": {
                 "attack": 0,
-                "decay": 3276,
-                "release": 23757,
-                "sustain": 983,
+                "decay": 9471,
+                "release": 0,
+                "sustain": 32767,
             },
         },
         "fx": {
             "active": False,
-            "params": [22014, 0, 30285, 11880, 0, 32767, 0, 0],
+            "params": [24002, 0, 0, 30719, 0, 32767, 0, 0],
             "type": "ladder",
         },
         "lfo": {
@@ -202,7 +167,6 @@ def generate_preset(name: str, output_dir: str):
         samples = render_note(name, note)
         framecount = len(samples)
 
-        # OP-XY: filenames <=14 chars
         wav_name = f"{note.lower()}.wav"
         wav_path = os.path.join(preset_dir, wav_name)
         save_wav(wav_path, samples)
@@ -210,7 +174,7 @@ def generate_preset(name: str, output_dir: str):
         sample_files.append((wav_name, midi, framecount))
         total_kb += os.path.getsize(wav_path) / 1024
 
-    regions = build_regions(sample_files, name)
+    regions = build_regions(sample_files)
     patch = make_patch_json(regions, name)
 
     with open(os.path.join(preset_dir, "patch.json"), "w") as f:
