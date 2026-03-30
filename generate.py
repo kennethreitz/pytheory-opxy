@@ -1,40 +1,44 @@
-"""Generate OP-XY .preset folders for every PyTheory instrument.
+"""Generate OP-XY multisampler .preset folders for every PyTheory instrument.
 
-Each preset contains a single A4 (440 Hz) sample and a patch.json
-configured as a synth sampler with pitch.keycenter = 69 (MIDI A4).
-The OP-XY transposes from this reference when you play other keys.
+Each preset contains samples at C2, C3, C4, A4, C5, C6 with key ranges
+split at the midpoints between samples. The OP-XY transposes from the
+nearest sample when you play other keys.
 """
 
 import json
 import os
-import struct
 import wave
 
 import numpy as np
 
 from pytheory import Tone, Score
 from pytheory.play import render_score, SAMPLE_RATE
-from pytheory.rhythm import INSTRUMENTS
+from pytheory.rhythm import INSTRUMENTS, Duration
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "pytheory")
-DURATION_MS = 3000  # 3 seconds per sample
-NOTE = "A4"
+
+# Sample points: (note_name, midi_number)
+SAMPLE_POINTS = [
+    ("C2", 36),
+    ("C3", 48),
+    ("C4", 60),
+    ("A4", 69),
+    ("C5", 72),
+    ("C6", 84),
+]
 
 
-def render_instrument(name: str) -> np.ndarray:
-    """Render a single A4 note using the given instrument preset.
+def render_note(instrument_name: str, note: str) -> np.ndarray:
+    """Render a single note using the given instrument preset.
 
     Returns mono float32 numpy array.
     """
     score = Score("4/4", bpm=80)
-    part = score.part("inst", instrument=name)
-    # 3 seconds at 80 bpm = 4 beats
-    from pytheory.rhythm import Duration
-    part.add(Tone.from_string(NOTE), Duration.WHOLE)
+    part = score.part("inst", instrument=instrument_name)
+    part.add(Tone.from_string(note), Duration.WHOLE)
 
     buf = render_score(score)  # float32 stereo (N, 2)
 
-    # Mix to mono
     if buf.ndim == 2:
         mono = buf.mean(axis=1)
     else:
@@ -47,17 +51,61 @@ def save_wav(path: str, samples: np.ndarray):
     """Save float32 mono samples as 16-bit 44100 Hz mono WAV."""
     peak = np.max(np.abs(samples))
     if peak > 0:
-        samples = samples / peak  # normalize to -1..1
+        samples = samples / peak
     pcm = (samples * 32767).astype(np.int16)
 
     with wave.open(path, "w") as wf:
         wf.setnchannels(1)
-        wf.setsampwidth(2)  # 16-bit
+        wf.setsampwidth(2)
         wf.setframerate(SAMPLE_RATE)
         wf.writeframes(pcm.tobytes())
 
 
-def make_patch_json(sample_filename: str, framecount: int) -> dict:
+def build_regions(sample_files):
+    """Build OP-XY multisampler regions from a list of (filename, midi_note, framecount).
+
+    Key ranges are split at midpoints between adjacent sample points.
+    """
+    regions = []
+    for i, (filename, midi, framecount) in enumerate(sample_files):
+        # Calculate key range: midpoint to previous, midpoint to next
+        if i == 0:
+            lokey = 0
+        else:
+            prev_midi = sample_files[i - 1][1]
+            lokey = (prev_midi + midi) // 2 + 1
+
+        if i == len(sample_files) - 1:
+            hikey = 127
+        else:
+            next_midi = sample_files[i + 1][1]
+            hikey = (midi + next_midi) // 2
+
+        regions.append({
+            "fade.in": 0,
+            "fade.out": 0,
+            "framecount": framecount,
+            "hikey": hikey,
+            "lokey": lokey,
+            "loop.crossfade": 0,
+            "loop.enabled": False,
+            "loop.end": framecount,
+            "loop.onrelease": False,
+            "loop.start": 0,
+            "pan": 0,
+            "pitch.keycenter": midi,
+            "playmode": "oneshot",
+            "reverse": False,
+            "sample": filename,
+            "sample.end": framecount,
+            "transpose": 0,
+            "tune": 0,
+        })
+
+    return regions
+
+
+def make_patch_json(regions: list) -> dict:
     """Build an OP-XY multisampler patch.json."""
     return {
         "engine": {
@@ -101,62 +149,46 @@ def make_patch_json(sample_filename: str, framecount: int) -> dict:
         },
         "octave": 0,
         "platform": "OP-XY",
-        "regions": [
-            {
-                "fade.in": 0,
-                "fade.out": 0,
-                "framecount": framecount,
-                "hikey": 127,
-                "lokey": 0,
-                "loop.crossfade": 0,
-                "loop.enabled": False,
-                "loop.end": framecount,
-                "loop.onrelease": False,
-                "loop.start": 0,
-                "pan": 0,
-                "pitch.keycenter": 69,  # MIDI A4
-                "playmode": "oneshot",
-                "reverse": False,
-                "sample": sample_filename,
-                "sample.end": framecount,
-                "transpose": 0,
-                "tune": 0,
-            }
-        ],
+        "regions": regions,
         "type": "multisampler",
         "version": 4,
     }
 
 
 def generate_preset(name: str, output_dir: str):
-    """Generate a single .preset folder for the named instrument."""
+    """Generate a multisampled .preset folder for the named instrument."""
     preset_dir = os.path.join(output_dir, f"{name}.preset")
     os.makedirs(preset_dir, exist_ok=True)
 
-    # Render audio
-    samples = render_instrument(name)
-    framecount = len(samples)
+    sample_files = []
+    total_kb = 0
 
-    # Truncate filename to 14 chars for OP-XY compatibility
-    wav_name = f"{name[:14]}.wav"
-    wav_path = os.path.join(preset_dir, wav_name)
-    save_wav(wav_path, samples)
+    for note, midi in SAMPLE_POINTS:
+        samples = render_note(name, note)
+        framecount = len(samples)
 
-    # Write patch.json
-    patch = make_patch_json(wav_name, framecount)
-    patch_path = os.path.join(preset_dir, "patch.json")
-    with open(patch_path, "w") as f:
+        # OP-XY: filenames <=14 chars
+        wav_name = f"{note.lower()}.wav"
+        wav_path = os.path.join(preset_dir, wav_name)
+        save_wav(wav_path, samples)
+
+        sample_files.append((wav_name, midi, framecount))
+        total_kb += os.path.getsize(wav_path) / 1024
+
+    regions = build_regions(sample_files)
+    patch = make_patch_json(regions)
+
+    with open(os.path.join(preset_dir, "patch.json"), "w") as f:
         json.dump(patch, f, indent=2)
 
-    size_kb = os.path.getsize(wav_path) / 1024
-    print(f"  {name:24s} -> {wav_name:18s} ({framecount:>7d} frames, {size_kb:.0f} KB)")
+    print(f"  {name:24s}  {len(SAMPLE_POINTS)} samples  ({total_kb:.0f} KB)")
 
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     instruments = sorted(INSTRUMENTS.keys())
-    print(f"Generating {len(instruments)} OP-XY presets to {OUTPUT_DIR}/\n")
+    print(f"Generating {len(instruments)} multisampled OP-XY presets to {OUTPUT_DIR}/\n")
 
     for name in instruments:
         try:
