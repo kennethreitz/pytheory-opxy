@@ -34,18 +34,23 @@ Each `.preset` folder contains:
 
 ## Installation
 
-```
-pip install pytheory numpy scipy
-```
+### OP-XY
 
-Or install the project directly:
+1. Connect your OP-XY to your computer via USB-C (MTP mode).
+2. Copy the `.preset` folders from `pytheory/` into `/presets/user/` on the device.
+3. The presets will appear in the OP-XY's preset browser under **User**.
 
-```
-pip install .
-```
+### OP-1 / OP-1 Field
+
+1. Connect your OP-1 via USB and enter disk mode (TE > USB Disk).
+2. Copy the `.wav` files from each preset folder into `/synth/user/` on the device.
+3. Load them into the Sampler synth engine.
 
 ## Regenerating
 
+Requires Python 3.10+ and [PyTheory](https://github.com/kennethreitz/pytheory):
+
 ```
+pip install pytheory numpy scipy
 python generate.py
 ```
