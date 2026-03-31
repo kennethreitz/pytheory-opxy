@@ -31,8 +31,10 @@ OP-XY users: [Field Kit](https://teenage.engineering/apps/field-kit) makes manag
 
 ## Instruments
 
-69 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
-Mono/poly playmode set per instrument.
+65 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
+Playmode, looping, and sample length are set per instrument — legato for theremin and
+didgeridoo, mono for winds and brass, looping for bowed strings and sustained sounds,
+longer samples for instruments with slow decays.
 
 ```
   Keys         piano, electric_piano, wurlitzer, pipe_organ, organ,
@@ -46,10 +48,8 @@ Mono/poly playmode set per instrument.
   Brass        trumpet, trombone, french_horn, tuba, brass_ensemble
 
   Plucked      acoustic_guitar, electric_guitar, clean_guitar,
-               crunch_guitar, distorted_guitar, orange_crunch,
-               metal_guitar, bass_guitar, upright_bass, harp,
-               sitar, pedal_steel, banjo, mandolin, mandola,
-               ukulele, koto
+               bass_guitar, upright_bass, harp, sitar, pedal_steel,
+               banjo, mandolin, mandola, ukulele, koto
 
   Mallet       marimba, vibraphone, xylophone, glockenspiel,
                tubular_bells, timpani, crotales, tingsha,
