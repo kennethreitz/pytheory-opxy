@@ -122,15 +122,30 @@ def save_wav(path: str, samples: np.ndarray):
         wf.writeframes(pcm.tobytes())
 
 
+def _find_zero_crossing(samples, target, direction=1):
+    """Find the nearest positive-going zero crossing to target frame.
+
+    Searches outward from target in the given direction.
+    Returns the frame index where the waveform crosses from negative to positive.
+    """
+    n = len(samples)
+    for offset in range(min(4410, n // 4)):  # search up to ~100ms
+        idx = target + offset * direction
+        if 0 < idx < n - 1:
+            if samples[idx - 1] <= 0 < samples[idx]:
+                return idx
+    return target  # fallback
+
+
 def build_regions(sample_files, instrument_name: str):
     """Build OP-XY sampler regions matching the factory preset format.
 
-    Key ranges split at midpoints. Looping instruments get a sustain
-    loop in the middle of the sample. All get loop.onrelease=true.
+    Key ranges split at midpoints. Loop points snap to zero crossings
+    for click-free looping.
     """
     should_loop = instrument_name in LOOP_INSTRUMENTS
     regions = []
-    for i, (filename, midi, framecount) in enumerate(sample_files):
+    for i, (filename, midi, framecount, samples) in enumerate(sample_files):
         if i == 0:
             lokey = 0
         else:
@@ -144,13 +159,18 @@ def build_regions(sample_files, instrument_name: str):
             hikey = (midi + next_midi) // 2
 
         if should_loop:
-            # Loop the sustain portion — skip attack, loop middle
-            loop_start = framecount * 2 // 5   # 40% in (past attack)
-            loop_end = framecount * 4 // 5     # 80%
-            crossfade = max(1, framecount // 20)  # ~5% crossfade
+            # Loop the sustain portion — skip attack, snap to zero crossings
+            raw_start = framecount * 2 // 5   # ~40%
+            raw_end = framecount * 4 // 5     # ~80%
+            loop_start = _find_zero_crossing(samples, raw_start, direction=1)
+            loop_end = _find_zero_crossing(samples, raw_end, direction=-1)
+            # Crossfade proportional to loop length
+            loop_len = max(1, loop_end - loop_start)
+            crossfade = max(1, loop_len // 10)  # 10% of loop
         else:
-            # Non-looping: loop near tail (factory style)
-            loop_start = framecount * 9 // 10
+            # Non-looping: loop near tail
+            raw_start = framecount * 9 // 10
+            loop_start = _find_zero_crossing(samples, raw_start, direction=1)
             loop_end = framecount
             crossfade = max(1, framecount // 100)
 
@@ -206,7 +226,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             "width": 0,
         },
         "envelope": {
-            "amp": {"attack": 0, "decay": 2457, "release": 7841, "sustain": 32767},
+            "amp": {"attack": 0, "decay": 2457, "release": 2000, "sustain": 32767},
             "filter": {
                 "attack": 0,
                 "decay": 9471,
@@ -248,7 +268,7 @@ def generate_preset(name: str, output_dir: str):
         wav_path = os.path.join(preset_dir, wav_name)
         save_wav(wav_path, samples)
 
-        sample_files.append((wav_name, midi, framecount))
+        sample_files.append((wav_name, midi, framecount, samples))
         total_kb += os.path.getsize(wav_path) / 1024
 
     regions = build_regions(sample_files, name)
