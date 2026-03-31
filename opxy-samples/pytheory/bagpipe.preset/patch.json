@@ -31,7 +31,7 @@
       16384
     ],
     "playmode": "mono",
-    "portamento.amount": 0,
+    "portamento.amount": 8000,
     "portamento.type": 32767,
     "transpose": 0,
     "tuning.root": 0,

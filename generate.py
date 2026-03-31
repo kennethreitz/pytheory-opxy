@@ -21,18 +21,23 @@ OP1_DIR = os.path.join(os.path.dirname(__file__), "op1-samples", "pytheory")
 # Instruments that should be monophonic (not polyphonic)
 # Monophonic instruments (no polyphony, but no glide)
 MONO_INSTRUMENTS = {
+    # Wind (articulated, not sliding)
     "flute", "clarinet", "oboe", "bassoon", "trumpet",
     "trombone", "french_horn", "tuba", "saxophone", "alto_sax",
-    "tenor_sax", "bari_sax", "bagpipe",
-    "bass_guitar", "upright_bass", "synth_bass", "808_bass",
-    "contrabass",
-    "synth_lead",
+    "tenor_sax", "bari_sax",
+    # Bass (fingered)
+    "bass_guitar", "upright_bass", "synth_bass", "contrabass",
+    # Solo strings
+    "sitar",
+    # Bellows
+    "accordion",
 }
 
 # Legato instruments (mono + portamento glide)
 LEGATO_INSTRUMENTS = {
-    "theremin", "didgeridoo", "vocal", "acid_bass",
+    "theremin", "didgeridoo", "vocal", "acid_bass", "808_bass",
     "pedal_steel", "singing_bowl", "singing_bowl_ring",
+    "harmonium", "bagpipe", "synth_lead",
 }
 
 # Instruments that need looping to sustain while held
@@ -46,18 +51,23 @@ LOOP_INSTRUMENTS = {
     "trumpet", "trombone", "french_horn", "tuba", "brass_ensemble",
     "saxophone", "alto_sax", "tenor_sax", "bari_sax",
     # Sustained synths
-    "synth_pad", "synth_lead", "synth_bass", "acid_bass",
+    "synth_pad", "synth_lead", "synth_bass", "acid_bass", "808_bass",
     "choir", "vocal", "granular_pad", "granular_texture",
-    # Resonant
-    "singing_bowl_ring",
+    # Resonant / sustained mallet
+    "singing_bowl_ring", "vibraphone",
 }
 
-# Instruments that need longer samples (slow attack/decay)
+# Instruments that need longer samples (slow attack/decay/resonance)
 LONG_SAMPLE_INSTRUMENTS = {
+    # Long natural decay
     "singing_bowl", "singing_bowl_ring", "tubular_bells",
+    "crotales", "tingsha", "steel_drum",
+    # Slow pads / textures
     "granular_pad", "granular_texture", "synth_pad",
     "string_ensemble", "choir", "pipe_organ",
-    "timpani", "crash",  # long tails
+    # Resonant instruments
+    "timpani", "vibraphone", "harp",
+    "electric_piano", "wurlitzer", "pedal_steel",
 }
 
 # Sample points: (note_name, midi_number)
