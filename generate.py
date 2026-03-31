@@ -144,9 +144,9 @@ def build_regions(sample_files, instrument_name: str):
             hikey = (midi + next_midi) // 2
 
         if should_loop:
-            # Loop the middle 60% of the sample for sustained sounds
-            loop_start = framecount // 5
-            loop_end = framecount * 4 // 5
+            # Loop the sustain portion — skip attack, loop middle
+            loop_start = framecount * 2 // 5   # 40% in (past attack)
+            loop_end = framecount * 4 // 5     # 80%
             crossfade = max(1, framecount // 20)  # ~5% crossfade
         else:
             # Non-looping: loop near tail (factory style)
@@ -159,7 +159,6 @@ def build_regions(sample_files, instrument_name: str):
             "hikey": hikey,
             "lokey": lokey,
             "loop.crossfade": crossfade,
-            "loop.enabled": should_loop,
             "loop.end": loop_end,
             "loop.onrelease": True,
             "loop.start": loop_start,
