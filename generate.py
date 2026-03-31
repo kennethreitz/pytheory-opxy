@@ -35,7 +35,7 @@ MONO_INSTRUMENTS = {
 LEGATO_INSTRUMENTS = {
     "theremin", "didgeridoo", "vocal", "acid_bass", "808_bass",
     "pedal_steel", "singing_bowl", "singing_bowl_ring",
-    "harmonium", "bagpipe", "synth_lead",
+    "bagpipe", "synth_lead",
 }
 
 
@@ -59,20 +59,6 @@ LONG_SAMPLE_INSTRUMENTS = {
     "synth_lead", "synth_bass",
 }
 
-# Instruments that need a long release (natural resonance after key up)
-LONG_RELEASE_INSTRUMENTS = {
-    "vibraphone", "marimba", "xylophone", "tubular_bells", "glockenspiel",
-    "celesta", "music_box", "crotales", "tingsha",
-    "singing_bowl", "singing_bowl_ring", "kalimba", "steel_drum",
-    "harp", "piano", "electric_piano", "wurlitzer", "harpsichord",
-    "timpani",
-    # Plucked strings ring out
-    "acoustic_guitar", "electric_guitar", "clean_guitar",
-    "banjo", "mandolin", "mandola", "ukulele", "koto", "sitar",
-    # Guitars ring out
-    "acoustic_guitar", "electric_guitar", "clean_guitar",
-    "crunch_guitar", "distorted_guitar", "orange_crunch", "metal_guitar",
-}
 
 EXCLUDED_INSTRUMENTS = {
     "saxophone", "alto_sax", "tenor_sax", "bari_sax",
@@ -194,28 +180,12 @@ def build_regions(sample_files, instrument_name: str):
     return regions
 
 
-# Sustained instruments that need decay to avoid playing forever
-SUSTAINED_INSTRUMENTS = (
-    MONO_INSTRUMENTS | LEGATO_INSTRUMENTS |
-    {"violin", "viola", "cello", "contrabass", "string_ensemble",
-     "brass_ensemble", "choir", "synth_pad", "granular_pad",
-     "granular_texture", "organ", "pipe_organ", "accordion",
-     "808_bass", "vibraphone"}
-)
-
-
 def _amp_envelope(instrument_name: str) -> dict:
-    """Return per-instrument amp envelope."""
-    if instrument_name in SUSTAINED_INSTRUMENTS:
-        # Decay brings volume down over time, sustain holds at ~70%
-        # Release fades out on key up
-        return {"attack": 0, "decay": 20000, "release": 8000, "sustain": 22000}
-    elif instrument_name in LONG_RELEASE_INSTRUMENTS:
-        # Plucked/resonant — no decay needed, long release to ring out
-        return {"attack": 0, "decay": 0, "release": 12000, "sustain": 32767}
-    else:
-        # Short percussive — quick release
-        return {"attack": 0, "decay": 0, "release": 2000, "sustain": 32767}
+    """Return amp envelope. Multisampler doesn't gate on key release,
+    so decay shapes the note and sustain sets the held level."""
+    # Default: PatchStudio multisampler envelope
+    # decay to ~46% then hold — works for everything
+    return {"attack": 0, "decay": 20295, "release": 16383, "sustain": 14989}
 
 
 def make_patch_json(regions: list, instrument_name: str) -> dict:

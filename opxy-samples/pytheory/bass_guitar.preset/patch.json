@@ -43,9 +43,9 @@
   "envelope": {
     "amp": {
       "attack": 0,
-      "decay": 20000,
-      "release": 8000,
-      "sustain": 22000
+      "decay": 20295,
+      "release": 16383,
+      "sustain": 14989
     },
     "filter": {
       "attack": 0,
