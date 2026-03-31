@@ -129,8 +129,8 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
 
     mono = mono.astype(np.float32)
 
-    # Trim trailing silence (below -60 dB)
-    threshold = 0.001
+    # Trim trailing silence (below -80 dB)
+    threshold = 0.0001
     abs_mono = np.abs(mono)
     # Find last sample above threshold
     above = np.where(abs_mono > threshold)[0]
@@ -164,15 +164,13 @@ def save_wav(path: str, samples: np.ndarray):
 
 
 def build_regions(sample_files, instrument_name: str):
-    """Build OP-XY sampler regions. No looping — amp envelope handles everything."""
-    regions = []
-    for i, (filename, midi, framecount, samples) in enumerate(sample_files):
-        if i == 0:
-            lokey = 0
-        else:
-            prev_midi = sample_files[i - 1][1]
-            lokey = (prev_midi + midi) // 2 + 1
+    """Build OP-XY multisampler regions.
 
+    Uses lokey=0 stacking (OP-XY picks highest hikey match).
+    Matches factory multisampler format with loop fields present but disabled.
+    """
+    regions = []
+    for i, (filename, midi, framecount, *_rest) in enumerate(sample_files):
         if i == len(sample_files) - 1:
             hikey = 127
         else:
@@ -182,7 +180,12 @@ def build_regions(sample_files, instrument_name: str):
         regions.append({
             "framecount": framecount,
             "hikey": hikey,
-            "lokey": lokey,
+            "lokey": 0,
+            "loop.crossfade": 0,
+            "loop.enabled": False,
+            "loop.end": framecount,
+            "loop.onrelease": False,
+            "loop.start": 0,
             "pitch.keycenter": midi,
             "reverse": False,
             "sample": filename,
@@ -253,9 +256,37 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
         "octave": LOW_OCTAVE_INSTRUMENTS.get(instrument_name, 0),
         "platform": "OP-XY",
         "regions": regions,
-        "type": "sampler",
+        "type": "multisampler",
         "version": 4,
     }
+
+
+def update_patch(name: str, output_dir: str):
+    """Update only the patch.json for an existing preset (no audio regen)."""
+    preset_dir = os.path.join(output_dir, f"{name}.preset")
+    if not os.path.isdir(preset_dir):
+        print(f"  {name:24s}  SKIP (no preset folder)", flush=True)
+        return
+
+    # Read framecount from existing WAVs
+    sample_files = []
+    for note, midi in SAMPLE_POINTS:
+        wav_name = f"{note.lower()}.wav"
+        wav_path = os.path.join(preset_dir, wav_name)
+        if not os.path.exists(wav_path):
+            print(f"  {name:24s}  SKIP (missing {wav_name})", flush=True)
+            return
+        with wave.open(wav_path, "r") as wf:
+            framecount = wf.getnframes()
+        sample_files.append((wav_name, midi, framecount))
+
+    regions = build_regions(sample_files, name)
+    patch = make_patch_json(regions, name)
+
+    with open(os.path.join(preset_dir, "patch.json"), "w") as f:
+        json.dump(patch, f, indent=2)
+
+    print(f"  {name:24s}  patch.json updated", flush=True)
 
 
 def generate_preset(name: str, output_dir: str):
@@ -299,11 +330,13 @@ def main():
     import sys
     all_instruments = sorted(k for k in INSTRUMENTS if k not in EXCLUDED_INSTRUMENTS)
 
-    # Allow generating a single instrument: python generate.py piano
-    if len(sys.argv) > 1:
-        instruments = [name for name in sys.argv[1:] if name in INSTRUMENTS]
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    patch_only = "--patch" in sys.argv
+
+    if args:
+        instruments = [name for name in args if name in INSTRUMENTS]
         if not instruments:
-            print(f"Unknown instrument(s): {sys.argv[1:]}")
+            print(f"Unknown instrument(s): {args}")
             print(f"Available: {', '.join(all_instruments)}")
             sys.exit(1)
     else:
@@ -311,6 +344,17 @@ def main():
 
     # OP-XY multisampled presets
     os.makedirs(OPXY_DIR, exist_ok=True)
+
+    if patch_only:
+        print(f"Updating {len(instruments)} patch.json files in {OPXY_DIR}/\n")
+        for name in instruments:
+            try:
+                update_patch(name, OPXY_DIR)
+            except Exception as e:
+                print(f"  {name:24s} FAILED: {e}")
+        print(f"\nDone. {len(instruments)} patches updated.")
+        return
+
     print(f"Generating {len(instruments)} OP-XY presets to {OPXY_DIR}/\n")
 
     for name in instruments:
