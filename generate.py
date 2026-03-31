@@ -35,7 +35,7 @@ MONO_INSTRUMENTS = {
 LEGATO_INSTRUMENTS = {
     "theremin", "didgeridoo", "vocal", "acid_bass", "808_bass",
     "pedal_steel", "singing_bowl", "singing_bowl_ring",
-    "bagpipe", "synth_lead",
+    "synth_lead",
 }
 
 
