@@ -70,6 +70,11 @@ LONG_SAMPLE_INSTRUMENTS = {
     "electric_piano", "wurlitzer", "pedal_steel",
 }
 
+# Temporarily excluded — distortion/cabinet not applied in render path
+EXCLUDED_INSTRUMENTS = {
+    "crunch_guitar", "distorted_guitar", "orange_crunch", "metal_guitar",
+}
+
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
     ("C2", 36),
@@ -269,7 +274,7 @@ def generate_op1_sample(name: str, output_dir: str):
 
 
 def main():
-    instruments = sorted(INSTRUMENTS.keys())
+    instruments = sorted(k for k in INSTRUMENTS if k not in EXCLUDED_INSTRUMENTS)
 
     # OP-XY multisampled presets
     os.makedirs(OPXY_DIR, exist_ok=True)
