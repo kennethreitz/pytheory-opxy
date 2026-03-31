@@ -80,6 +80,19 @@ EXCLUDED_INSTRUMENTS = {
     "saxophone", "alto_sax", "tenor_sax", "bari_sax",
 }
 
+# Default octave offset for instruments that sit in a low register
+LOW_OCTAVE_INSTRUMENTS = {
+    "didgeridoo": -2,
+    "contrabass": -1,
+    "upright_bass": -1,
+    "bass_guitar": -1,
+    "synth_bass": -1,
+    "acid_bass": -1,
+    "808_bass": -2,
+    "tuba": -1,
+    "timpani": -1,
+}
+
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
     ("C2", 36),
@@ -237,7 +250,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             "params": [6212, 16865, 18344, 16000, 0, 0, 0, 0],
             "type": "tremolo",
         },
-        "octave": 0,
+        "octave": LOW_OCTAVE_INSTRUMENTS.get(instrument_name, 0),
         "platform": "OP-XY",
         "regions": regions,
         "type": "sampler",
