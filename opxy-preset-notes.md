@@ -8,9 +8,9 @@
 
 # OP-XY Preset Format Notes
 
-Findings from reverse-engineering Teenage Engineering OP-XY factory presets
-and community tools. Everything here was learned by examining real `.preset`
-folders on the device via Field Kit.
+Findings from reverse-engineering Teenage Engineering OP-XY factory presets,
+the official TE docs, and community tools (OP-PatchStudio, opxy-drum-tool).
+Everything here was learned the hard way.
 
 ---
 
@@ -20,60 +20,90 @@ A `.preset` is a folder containing:
 - `patch.json` — metadata, engine settings, region mappings
 - One or more `.wav` files — 16-bit mono, 44100 Hz
 
-## Preset Types
+---
 
-There are three `"type"` values in `patch.json`:
+## The Three Sampler Types
 
-### `"sampler"`
+From the [OP-XY docs](https://teenage.engineering/guides/op-xy/sample):
 
-Used for **all pitched/melodic instruments** — both single-sample and multi-sample.
-This is the correct type for instruments, not `"multisampler"`.
+### `"sampler"` — One Shot Synth Sampler
 
-- Regions define key ranges with `lokey`/`hikey` splits
-- `pitch.keycenter` tells the engine what note the sample is tuned to
-- The engine transposes from the keycenter when you play other notes
-- Factory presets use midpoint key splits (not `lokey: 0` stacking)
+**Single sample** pitched across the keyboard. The key you record on
+becomes the reference pitch. The OP-XY transposes from there.
 
-### `"multisampler"`
+- Responds to key release (gate behavior)
+- `loop.onrelease` controls whether looping continues after key up
+- Does NOT use `loop.enabled` field
+- Only one sample zone — additional regions are ignored
 
-Found in some third-party presets (e.g. `asc multis` folder). Uses `loop.enabled`
-field in regions (unlike `"sampler"` type). Relies on amp envelope for
-sustain/release rather than `loop.onrelease`.
+### `"multisampler"` — Multisampler
 
-**Not recommended** — `"sampler"` type with multiple regions works better and
-matches factory behavior.
+**Up to 24 samples** mapped across the keyboard in zones. Each zone has
+its own sample and pitch reference. "Fills down" — pitches samples down
+to cover gaps between zones.
 
-### `"drum"`
+- **Does NOT gate on key release** — samples play through to completion
+- Amp envelope decay is the only way to shape note length
+- Uses `lokey: 0` stacking (OP-XY picks the region with highest `hikey`
+  that the played note falls under)
+- Supports `loop.enabled` and `loop.onrelease` fields in regions
+- `playmode` field is NOT used in regions (only in drum type)
 
-Used for drum kits. 24 slots mapped to MIDI keys 53–76. Each region gets
-`lokey == hikey` (one sample per key). Always `"playmode": "oneshot"` in regions.
+### `"drum"` — Drum Sampler
+
+**24 one-shot samples** mapped to individual keys 53–76. No pitch shifting.
+
+- Each key triggers its own independent sample
+- `playmode: "oneshot"` in each region
+- Uses extra region fields: `fade.in`, `fade.out`, `pan`, `playmode`, `transpose`
+
+---
+
+## Key Limitation: Multisampler Has No Gate
+
+This is the most important thing to understand. The `"multisampler"` type
+**does not stop playback on key release**. The sample plays through
+regardless of whether you're holding the key or not.
+
+The `"sampler"` type does gate, but only supports a single sample.
+
+**Workaround:** Use amp envelope `decay` to shape notes so they
+naturally fade. The [OP-PatchStudio](https://github.com/ish-/te-opxy-patchstudio)
+default envelope works well:
+
+```json
+"amp": {"attack": 0, "decay": 20295, "sustain": 14989, "release": 16383}
+```
+
+This makes notes hit at full volume, decay to ~46%, and hold there.
 
 ---
 
 ## Region Fields
 
-### Sampler regions
+### Multisampler regions
 
 ```json
 {
   "framecount": 132300,
-  "hikey": 60,
-  "lokey": 43,
-  "loop.crossfade": 1323,
-  "loop.end": 105840,
-  "loop.onrelease": true,
-  "loop.start": 52920,
-  "pitch.keycenter": 60,
+  "hikey": 54,
+  "lokey": 0,
+  "loop.crossfade": 0,
+  "loop.enabled": false,
+  "loop.end": 132300,
+  "loop.onrelease": false,
+  "loop.start": 0,
+  "pitch.keycenter": 48,
   "reverse": false,
-  "sample": "c4.wav",
+  "sample": "c3.wav",
   "sample.end": 132300,
   "tune": 0
 }
 ```
 
-**Important:** Sampler regions do NOT use `loop.enabled`. The presence of
-`loop.enabled: true` causes the OP-XY to loop forever, ignoring key release.
-Factory sampler presets only use `loop.onrelease`.
+**`loop.onrelease`** means "continue looping after key release" — the
+opposite of what you might expect. Setting it to `true` makes notes
+sustain forever. Leave it `false`.
 
 ### Drum regions
 
@@ -95,51 +125,13 @@ Factory sampler presets only use `loop.onrelease`.
 }
 ```
 
-Drum regions have extra fields not present in sampler regions:
-`fade.in`, `fade.out`, `pan`, `playmode`, `transpose`.
+### Multisampler play modes (from TE docs)
 
----
-
-## Looping Behavior
-
-```
-  key down                              key up
-  v                                     v
-  |--attack--|-------sustain loop-------|--release--|
-  |          |  loop.start → loop.end   |          |
-  |          |  ↑___________________↓   |  fade    |
-  |  play    |  |  loop.crossfade   |   |  out     |
-  |  from 0  |  |___________________|   |          |
-```
-
-### `loop.onrelease: true` (sampler type)
-
-This is the key field for sustain-then-release behavior:
-- While key is held: sample plays, then loops between `loop.start` and `loop.end`
-- On key release: loop stops, amp envelope release takes over
-
-### `loop.onrelease: false`
-
-Sample plays through once. Amp envelope handles everything.
-
-### `loop.enabled` (multisampler type only)
-
-Only used with `"type": "multisampler"`. When `true`, loops continuously
-regardless of key state. **Do not use with `"sampler"` type** — it causes
-notes to sustain forever.
-
-### Loop Point Selection
-
-For click-free looping, loop start and end should land on **positive-going
-zero crossings** in the audio waveform. Searching outward from the target
-position (~100ms search window) to find the nearest crossing eliminates
-audible clicks at the loop boundary.
-
-Factory presets typically:
-- **Sustained sounds** (strings, organ): loop from ~20–40% to ~80% of the sample
-- **Plucked/decaying sounds** (harp, piano): loop near the tail (~90%+), just
-  enough to sustain if held very long
-- **Crossfade**: proportional to loop length. Factory values range from 1 to 30000+
+These are set via the device UI, not in `patch.json` regions:
+- **Key** — sample plays while held (only works on device-created presets?)
+- **Oneshot** — plays through regardless of key
+- **Loop** — loops at end point
+- **Mute group** — choke behavior
 
 ---
 
@@ -158,21 +150,25 @@ Glide between notes when `playmode` is `"mono"`. Range 0–32767.
 Set to 0 for articulated mono (trumpet, flute). Set to ~8000 for
 legato glide (theremin, pedal steel).
 
-### Envelope values
+### Amp envelope
 
-All envelope parameters are 0–32767.
+All parameters are 0–32767. Since multisampler doesn't gate:
 
-Factory amp envelopes vary widely:
-- **Bright piano**: `attack: 0, decay: 31485, release: 11056, sustain: 32767`
-- **Body movin bass**: `attack: 0, decay: 0, release: 25885, sustain: 32767`
-- **Church organ**: `attack: 0, decay: 25067, release: 16382, sustain: 32767`
+- **`decay`** is the primary control for note shape
+- **`sustain`** sets the held level (lower = notes fade more)
+- **`release`** has minimal effect (no gate to trigger it)
+- **`attack`** controls fade-in time
 
-A release of ~2000 gives a quick cutoff. Higher values (10000+) give a
-slow fade after key release.
+Recommended default (from OP-PatchStudio):
+```
+attack: 0, decay: 20295, sustain: 14989, release: 16383
+```
 
-### Volume
+### `octave`
 
-Factory presets typically use `volume: 18348–24901`. Default center is 16384.
+Shifts the keyboard range. Use negative values for bass instruments:
+- `-2` for didgeridoo, 808 bass
+- `-1` for bass guitar, contrabass, tuba, timpani
 
 ---
 
@@ -188,8 +184,7 @@ Factory presets typically use `volume: 18348–24901`. Default center is 16384.
   └─────────────────────────────────────────────┘
 ```
 
-The standard OP-XY drum layout (from the community
-[opxy-drum-tool](https://buba447.github.io/opxy-drum-tool/) and factory Rytm kits):
+Standard layout (from [opxy-drum-tool](https://buba447.github.io/opxy-drum-tool/)):
 
 ```
 53  Kick             61  Closed HH
@@ -210,23 +205,12 @@ The standard OP-XY drum layout (from the community
                      76  Chi/Aux
 ```
 
-### Drum engine settings
-
-Factory kits vary between two approaches:
-
-**Classix/Yamalog style**: `playmode: "mono"`, `octave: -1`, `transpose: 12`
-**Stomp style**: `playmode: "poly"`, `octave: 0`, `transpose: 0`
-
-The community drum tool uses the poly/0/0 approach.
-Amp envelope for drums is typically `release: 0` or `release: 1000`.
-
 ---
 
 ## File Naming
 
 - OP-XY filenames should be **14 characters or fewer**
 - Factory samples use the pattern `unnamed-{note}-{velocity}.wav`
-- Third-party samples use descriptive names (e.g. `C2_AmbientGuitar_SG.wav`)
 - `.preset` folder names appear in the device browser as-is
 
 ---
@@ -235,5 +219,5 @@ Amp envelope for drums is typically `release: 0` or `release: 1000`.
 
 - [Field Kit](https://teenage.engineering/apps/field-kit) — TE's macOS app for managing OP-XY presets
 - [opxy-drum-tool](https://buba447.github.io/opxy-drum-tool/) — community web tool for building drum kits
-- [OP-PatchStudio](https://github.com/ish-/te-opxy-patchstudio) — community preset editor
+- [OP-PatchStudio](https://github.com/ish-/te-opxy-patchstudio) — community preset editor (best reference for multisampler format)
 - [teopxy](https://github.com/paul-sneddon/teopxy) — Python tool for converting OP-1 patches to OP-XY
