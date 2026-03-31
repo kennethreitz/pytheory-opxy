@@ -95,17 +95,11 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
     Returns mono float32 numpy array.
     Long-decay instruments get 8 seconds, others get 3.
     """
-    if instrument_name in LONG_SAMPLE_INSTRUMENTS:
-        bpm = 30  # 4 beats at 30 bpm = 8 seconds
-    else:
-        bpm = 80  # 4 beats at 80 bpm = 3 seconds
+    bpm = 100  # whole note = 2.4s, plus tail rests for decay
 
     score = Score("4/4", bpm=bpm)
     part = score.part("inst", instrument=instrument_name)
-    if instrument_name in LONG_SAMPLE_INSTRUMENTS:
-        part.add(Tone.from_string(note), Duration.WHOLE)
-    else:
-        part.add(Tone.from_string(note), Duration.EIGHTH)
+    part.add(Tone.from_string(note), Duration.WHOLE)
     # Let the tail ring out
     part.rest(Duration.WHOLE)
     part.rest(Duration.WHOLE)

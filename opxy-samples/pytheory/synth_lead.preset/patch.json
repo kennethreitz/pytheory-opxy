@@ -86,13 +86,13 @@
   "platform": "OP-XY",
   "regions": [
     {
-      "framecount": 42285,
+      "framecount": 42281,
       "hikey": 42,
       "lokey": 0,
       "pitch.keycenter": 36,
       "reverse": false,
       "sample": "c2.wav",
-      "sample.end": 42285,
+      "sample.end": 42281,
       "tune": 0
     },
     {
@@ -136,13 +136,13 @@
       "tune": 0
     },
     {
-      "framecount": 42287,
+      "framecount": 41488,
       "hikey": 127,
       "lokey": 79,
       "pitch.keycenter": 84,
       "reverse": false,
       "sample": "c6.wav",
-      "sample.end": 42287,
+      "sample.end": 41488,
       "tune": 0
     }
   ],
