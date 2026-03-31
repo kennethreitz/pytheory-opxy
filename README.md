@@ -14,7 +14,7 @@ Every sound is rendered from scratch — no samples were harmed in the making of
 
 ---
 
-## Getting the Presets
+## Getting the Presets 📦
 
 Click the green **"Code"** button at the top of this page, then **"Download ZIP"**.
 
