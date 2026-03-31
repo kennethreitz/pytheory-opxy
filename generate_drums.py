@@ -20,32 +20,33 @@ HIT_DURATION = 0.5  # seconds per drum hit
 # ── Drum kits: name -> list of (DrumSound, display_name) ─────────────────────
 
 KITS = {
-    # GM-style layout: kick, snare/rim/clap, hats, toms, cymbals, percussion
+    # 808/909-style layout matching OP-XY factory kits (Rytm classic)
+    # Kicks at bottom, snare/rim/clap, toms interleaved with hats, cymbals top
     "standard": [
-        (DrumSound.KICK, "kick"),          # 53
-        (DrumSound.RIMSHOT, "rimshot"),     # 54
-        (DrumSound.SNARE, "snare"),        # 55
-        (DrumSound.CLAP, "clap"),          # 56
-        (DrumSound.PEDAL_HAT, "pd_hat"),   # 57
-        (DrumSound.CLOSED_HAT, "cl_hat"),  # 58
-        (DrumSound.OPEN_HAT, "op_hat"),    # 59
-        (DrumSound.LOW_TOM, "lo_tom"),     # 60
-        (DrumSound.MID_TOM, "mid_tom"),    # 61
-        (DrumSound.HIGH_TOM, "hi_tom"),    # 62
-        (DrumSound.CRASH, "crash"),        # 63
-        (DrumSound.RIDE, "ride"),          # 64
-        (DrumSound.RIDE_BELL, "ride_bell"),# 65
-        (DrumSound.TAMBOURINE, "tamb"),    # 66
-        (DrumSound.COWBELL, "cowbell"),     # 67
-        (DrumSound.CLAVE, "clave"),        # 68
-        (DrumSound.SHAKER, "shaker"),      # 69
-        (DrumSound.CONGA_LOW, "conga_lo"), # 70
-        (DrumSound.CONGA_HIGH, "conga_hi"),# 71
-        (DrumSound.BONGO_LOW, "bongo_lo"), # 72
-        (DrumSound.BONGO_HIGH, "bongo_hi"),# 73
-        (DrumSound.TIMBALE_LOW, "timbal_lo"),# 74
-        (DrumSound.TIMBALE_HIGH, "timbal_hi"),# 75
-        (DrumSound.GUIRO, "guiro"),        # 76
+        (DrumSound.KICK, "kick"),          # 53  kick
+        (DrumSound.KICK, "kick2"),         # 54  kick variation
+        (DrumSound.SNARE, "snare"),        # 55  snare
+        (DrumSound.RIMSHOT, "rimshot"),    # 56  rimshot
+        (DrumSound.CLAP, "clap"),          # 57  clap
+        (DrumSound.COWBELL, "cowbell"),     # 58  cowbell
+        (DrumSound.PEDAL_HAT, "pd_hat"),   # 59  pedal hat
+        (DrumSound.LOW_TOM, "lo_tom"),     # 60  low tom
+        (DrumSound.CLOSED_HAT, "cl_hat"),  # 61  closed hat
+        (DrumSound.MID_TOM, "mid_tom"),    # 62  mid tom
+        (DrumSound.OPEN_HAT, "op_hat"),    # 63  open hat
+        (DrumSound.HIGH_TOM, "hi_tom"),    # 64  high tom
+        (DrumSound.TAMBOURINE, "tamb"),    # 65  tambourine
+        (DrumSound.RIDE, "ride"),          # 66  ride
+        (DrumSound.RIDE_BELL, "ride_bell"),# 67  ride bell
+        (DrumSound.CRASH, "crash"),        # 68  crash
+        (DrumSound.SHAKER, "shaker"),      # 69  shaker
+        (DrumSound.CLAVE, "clave"),        # 70  clave
+        (DrumSound.CONGA_LOW, "conga_lo"), # 71  conga low
+        (DrumSound.CONGA_HIGH, "conga_hi"),# 72  conga high
+        (DrumSound.BONGO_LOW, "bongo_lo"), # 73  bongo low
+        (DrumSound.BONGO_HIGH, "bongo_hi"),# 74  bongo high
+        (DrumSound.TIMBALE_LOW, "timbal_lo"),# 75  timbale low
+        (DrumSound.TIMBALE_HIGH, "timbal_hi"),# 76  timbale high
     ],
     "latin": [
         (DrumSound.KICK, "kick"),
@@ -114,16 +115,18 @@ KITS = {
         (DrumSound.CAJON_SLAP, "slap"),
         (DrumSound.CAJON_SLAP_SNARE, "slap_snare"),
     ],
-    # Metal: kick, snares, hats, toms, cymbals
+    # Metal: same 808 interleaved layout
     "metal": [
         (DrumSound.METAL_KICK, "kick"),
+        (DrumSound.METAL_KICK, "kick2"),
         (DrumSound.METAL_SNARE, "snare"),
         (DrumSound.SNARE, "snare2"),
         (DrumSound.METAL_HAT, "hat"),
-        (DrumSound.CLOSED_HAT, "cl_hat"),
-        (DrumSound.OPEN_HAT, "op_hat"),
+        (DrumSound.METAL_HAT, "hat2"),
         (DrumSound.LOW_TOM, "lo_tom"),
+        (DrumSound.CLOSED_HAT, "cl_hat"),
         (DrumSound.MID_TOM, "mid_tom"),
+        (DrumSound.OPEN_HAT, "op_hat"),
         (DrumSound.HIGH_TOM, "hi_tom"),
         (DrumSound.CRASH, "crash"),
         (DrumSound.RIDE, "ride"),
@@ -208,36 +211,36 @@ def make_drum_patch_json(regions: list) -> dict:
                 "velocity": {"amount": 16383, "target": 0},
             },
             "params": [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384],
-            "playmode": "poly",
-            "portamento.amount": 0,
+            "playmode": "mono",
+            "portamento.amount": 128,
             "portamento.type": 32767,
-            "transpose": 0,
+            "transpose": 12,
             "tuning.root": 0,
-            "tuning.scale": 0,
-            "velocity.sensitivity": 19660,
-            "volume": 18348,
+            "tuning.scale": 3045,
+            "velocity.sensitivity": 6879,
+            "volume": 24901,
             "width": 0,
         },
         "envelope": {
-            "amp": {"attack": 0, "decay": 0, "release": 500, "sustain": 32767},
+            "amp": {"attack": 0, "decay": 0, "release": 0, "sustain": 32767},
             "filter": {
-                "attack": 0,
-                "decay": 3276,
-                "release": 23757,
-                "sustain": 983,
+                "attack": 3932,
+                "decay": 13167,
+                "release": 9502,
+                "sustain": 18062,
             },
         },
         "fx": {
             "active": False,
-            "params": [22014, 0, 30285, 11880, 0, 32767, 0, 0],
-            "type": "ladder",
+            "params": [6963, 16711, 10382, 5632, 0, 32767, 0, 0],
+            "type": "z lowpass",
         },
         "lfo": {
             "active": False,
-            "params": [6212, 16865, 18344, 16000, 0, 0, 0, 0],
-            "type": "tremolo",
+            "params": [9168, 6334, 23210, 29491, 0, 0, 0, 18186],
+            "type": "random",
         },
-        "octave": 0,
+        "octave": -1,
         "platform": "OP-XY",
         "regions": regions,
         "type": "drum",
