@@ -46,7 +46,7 @@ Unzip the file — you'll get a folder called `pytheory-opxy-main` with everythi
 
 ## Instruments
 
-69 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
+65 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
 Each instrument is configured with appropriate playmode and release behavior —
 legato with glide for theremin and didgeridoo, mono for winds and brass,
 long release for resonant instruments like piano and vibraphone.
@@ -57,8 +57,7 @@ long release for resonant instruments like piano and vibraphone.
 
   Strings      violin, viola, cello, contrabass, string_ensemble
 
-  Woodwinds    flute, clarinet, oboe, bassoon, saxophone,
-               alto_sax, tenor_sax, bari_sax
+  Woodwinds    flute, clarinet, oboe, bassoon
 
   Brass        trumpet, trombone, french_horn, tuba, brass_ensemble
 

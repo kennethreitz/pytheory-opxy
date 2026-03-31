@@ -76,7 +76,9 @@ LONG_RELEASE_INSTRUMENTS = {
     "crunch_guitar", "distorted_guitar", "orange_crunch", "metal_guitar",
 }
 
-EXCLUDED_INSTRUMENTS = set()
+EXCLUDED_INSTRUMENTS = {
+    "saxophone", "alto_sax", "tenor_sax", "bari_sax",
+}
 
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
