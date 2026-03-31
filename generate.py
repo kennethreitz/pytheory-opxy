@@ -268,7 +268,7 @@ def generate_preset(name: str, output_dir: str):
     with open(os.path.join(preset_dir, "patch.json"), "w") as f:
         json.dump(patch, f, indent=2)
 
-    print(f"  {name:24s}  {len(SAMPLE_POINTS)} samples  ({total_kb:.0f} KB)")
+    print(f"  {name:24s}  {len(SAMPLE_POINTS)} samples  ({total_kb:.0f} KB)", flush=True)
 
 
 def generate_op1_sample(name: str, output_dir: str):
@@ -277,7 +277,7 @@ def generate_op1_sample(name: str, output_dir: str):
     wav_path = os.path.join(output_dir, f"{name}.wav")
     save_wav(wav_path, samples)
     size_kb = os.path.getsize(wav_path) / 1024
-    print(f"  {name:24s}  ({size_kb:.0f} KB)")
+    print(f"  {name:24s}  ({size_kb:.0f} KB)", flush=True)
 
 
 def main():
