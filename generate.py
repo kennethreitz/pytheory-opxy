@@ -70,10 +70,7 @@ LONG_SAMPLE_INSTRUMENTS = {
     "electric_piano", "wurlitzer", "pedal_steel",
 }
 
-# Temporarily excluded — distortion/cabinet not applied in render path
-EXCLUDED_INSTRUMENTS = {
-    "crunch_guitar", "distorted_guitar", "orange_crunch", "metal_guitar",
-}
+EXCLUDED_INSTRUMENTS = set()
 
 # Sample points: (note_name, midi_number)
 SAMPLE_POINTS = [
