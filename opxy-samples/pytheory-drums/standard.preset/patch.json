@@ -30,59 +30,59 @@
       16384,
       16384
     ],
-    "playmode": "mono",
-    "portamento.amount": 128,
+    "playmode": "poly",
+    "portamento.amount": 0,
     "portamento.type": 32767,
-    "transpose": 12,
+    "transpose": 0,
     "tuning.root": 0,
-    "tuning.scale": 3045,
-    "velocity.sensitivity": 6879,
-    "volume": 24901,
+    "tuning.scale": 0,
+    "velocity.sensitivity": 19660,
+    "volume": 18348,
     "width": 0
   },
   "envelope": {
     "amp": {
       "attack": 0,
       "decay": 0,
-      "release": 0,
+      "release": 1000,
       "sustain": 32767
     },
     "filter": {
-      "attack": 3932,
-      "decay": 13167,
-      "release": 9502,
-      "sustain": 18062
+      "attack": 0,
+      "decay": 3276,
+      "release": 23757,
+      "sustain": 983
     }
   },
   "fx": {
     "active": false,
     "params": [
-      6963,
-      16711,
-      10382,
-      5632,
+      22014,
+      0,
+      30285,
+      11880,
       0,
       32767,
       0,
       0
     ],
-    "type": "z lowpass"
+    "type": "ladder"
   },
   "lfo": {
     "active": false,
     "params": [
-      9168,
-      6334,
-      23210,
-      29491,
+      20309,
+      5679,
+      19114,
+      15807,
       0,
       0,
       0,
-      18186
+      12287
     ],
     "type": "random"
   },
-  "octave": -1,
+  "octave": 0,
   "platform": "OP-XY",
   "regions": [
     {
@@ -140,7 +140,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "rimshot.wav",
+      "sample": "snare2.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -155,7 +155,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "clap.wav",
+      "sample": "rimshot.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -170,7 +170,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "cowbell.wav",
+      "sample": "clap.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -185,7 +185,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "pd_hat.wav",
+      "sample": "tamb.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -200,7 +200,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "lo_tom.wav",
+      "sample": "shaker.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -230,7 +230,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "mid_tom.wav",
+      "sample": "cl_hat2.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -260,7 +260,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "hi_tom.wav",
+      "sample": "clave.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -275,7 +275,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "tamb.wav",
+      "sample": "lo_tom.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -305,7 +305,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "ride_bell.wav",
+      "sample": "mid_tom.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -335,7 +335,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "shaker.wav",
+      "sample": "hi_tom.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -350,7 +350,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "clave.wav",
+      "sample": "ride_bell.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -395,7 +395,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bongo_lo.wav",
+      "sample": "cowbell.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -410,7 +410,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "bongo_hi.wav",
+      "sample": "guiro.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -425,7 +425,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "timbal_lo.wav",
+      "sample": "pd_hat.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
@@ -440,7 +440,7 @@
       "pitch.keycenter": 60,
       "playmode": "oneshot",
       "reverse": false,
-      "sample": "timbal_hi.wav",
+      "sample": "agogo.wav",
       "sample.end": 22050,
       "transpose": 0,
       "tune": 0
