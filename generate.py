@@ -196,6 +196,30 @@ def build_regions(sample_files, instrument_name: str):
     return regions
 
 
+# Sustained instruments that need decay to avoid playing forever
+SUSTAINED_INSTRUMENTS = (
+    MONO_INSTRUMENTS | LEGATO_INSTRUMENTS |
+    {"violin", "viola", "cello", "contrabass", "string_ensemble",
+     "brass_ensemble", "choir", "synth_pad", "granular_pad",
+     "granular_texture", "organ", "pipe_organ", "accordion",
+     "808_bass", "vibraphone"}
+)
+
+
+def _amp_envelope(instrument_name: str) -> dict:
+    """Return per-instrument amp envelope."""
+    if instrument_name in SUSTAINED_INSTRUMENTS:
+        # Decay brings volume down over time, sustain holds at ~70%
+        # Release fades out on key up
+        return {"attack": 0, "decay": 20000, "release": 8000, "sustain": 22000}
+    elif instrument_name in LONG_RELEASE_INSTRUMENTS:
+        # Plucked/resonant — no decay needed, long release to ring out
+        return {"attack": 0, "decay": 0, "release": 12000, "sustain": 32767}
+    else:
+        # Short percussive — quick release
+        return {"attack": 0, "decay": 0, "release": 2000, "sustain": 32767}
+
+
 def make_patch_json(regions: list, instrument_name: str) -> dict:
     """Build an OP-XY multisampler patch.json matching factory format."""
     if instrument_name in LEGATO_INSTRUMENTS:
@@ -230,12 +254,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             "width": 0,
         },
         "envelope": {
-            "amp": {
-                "attack": 0,
-                "decay": 0,
-                "release": 12000 if instrument_name in LONG_RELEASE_INSTRUMENTS else 2000,
-                "sustain": 32767,
-            },
+            "amp": _amp_envelope(instrument_name),
             "filter": {
                 "attack": 0,
                 "decay": 9471,
