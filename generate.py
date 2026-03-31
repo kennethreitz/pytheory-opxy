@@ -29,8 +29,6 @@ MONO_INSTRUMENTS = {
     "bass_guitar", "upright_bass", "synth_bass", "contrabass",
     # Solo strings
     "sitar",
-    # Bellows
-    "accordion",
 }
 
 # Legato instruments (mono + portamento glide)
