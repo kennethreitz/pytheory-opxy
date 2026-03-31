@@ -50,8 +50,30 @@ LONG_SAMPLE_INSTRUMENTS = {
     "granular_pad", "granular_texture", "synth_pad",
     "string_ensemble", "choir", "pipe_organ",
     # Resonant instruments
-    "timpani", "vibraphone", "harp",
+    "timpani", "vibraphone", "marimba", "xylophone",
+    "glockenspiel", "celesta", "music_box", "kalimba", "harp",
+    "sitar", "piano", "harpsichord",
     "electric_piano", "wurlitzer", "pedal_steel",
+    # Sustained / legato — need length since we don't loop
+    "theremin", "didgeridoo", "vocal", "harmonium", "bagpipe",
+    "accordion", "organ", "808_bass", "acid_bass",
+    "violin", "viola", "cello", "contrabass",
+    "synth_lead", "synth_bass",
+}
+
+# Instruments that need a long release (natural resonance after key up)
+LONG_RELEASE_INSTRUMENTS = {
+    "vibraphone", "marimba", "xylophone", "tubular_bells", "glockenspiel",
+    "celesta", "music_box", "crotales", "tingsha",
+    "singing_bowl", "singing_bowl_ring", "kalimba", "steel_drum",
+    "harp", "piano", "electric_piano", "wurlitzer", "harpsichord",
+    "timpani",
+    # Plucked strings ring out
+    "acoustic_guitar", "electric_guitar", "clean_guitar",
+    "banjo", "mandolin", "mandola", "ukulele", "koto", "sitar",
+    # Guitars ring out
+    "acoustic_guitar", "electric_guitar", "clean_guitar",
+    "crunch_guitar", "distorted_guitar", "orange_crunch", "metal_guitar",
 }
 
 EXCLUDED_INSTRUMENTS = set()
@@ -80,7 +102,14 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
 
     score = Score("4/4", bpm=bpm)
     part = score.part("inst", instrument=instrument_name)
-    part.add(Tone.from_string(note), Duration.WHOLE)
+    if instrument_name in LONG_SAMPLE_INSTRUMENTS:
+        part.add(Tone.from_string(note), Duration.WHOLE)
+    else:
+        part.add(Tone.from_string(note), Duration.EIGHTH)
+    # Let the tail ring out
+    part.rest(Duration.WHOLE)
+    part.rest(Duration.WHOLE)
+    part.rest(Duration.WHOLE)
 
     buf = render_score(score)  # float32 stereo (N, 2)
 
@@ -89,7 +118,26 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
     else:
         mono = buf
 
-    return mono.astype(np.float32)
+    mono = mono.astype(np.float32)
+
+    # Trim trailing silence (below -60 dB)
+    threshold = 0.001
+    abs_mono = np.abs(mono)
+    # Find last sample above threshold
+    above = np.where(abs_mono > threshold)[0]
+    if len(above) > 0:
+        last_audible = above[-1]
+        # Keep a short fade-out after last audible sample
+        fade_len = min(4410, len(mono) - last_audible)  # ~100ms
+        trim_point = min(last_audible + fade_len, len(mono))
+        mono = mono[:trim_point]
+
+    # Fade out the last 5% so the sample ends cleanly
+    fade_len = max(1, len(mono) // 20)
+    fade = np.linspace(1.0, 0.0, fade_len, dtype=np.float32)
+    mono[-fade_len:] *= fade
+
+    return mono
 
 
 def save_wav(path: str, samples: np.ndarray):
@@ -170,7 +218,12 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             "width": 0,
         },
         "envelope": {
-            "amp": {"attack": 0, "decay": 0, "release": 2000, "sustain": 32767},
+            "amp": {
+                "attack": 0,
+                "decay": 0,
+                "release": 12000 if instrument_name in LONG_RELEASE_INSTRUMENTS else 2000,
+                "sustain": 32767,
+            },
             "filter": {
                 "attack": 0,
                 "decay": 9471,
@@ -234,7 +287,18 @@ def generate_op1_sample(name: str, output_dir: str):
 
 
 def main():
-    instruments = sorted(k for k in INSTRUMENTS if k not in EXCLUDED_INSTRUMENTS)
+    import sys
+    all_instruments = sorted(k for k in INSTRUMENTS if k not in EXCLUDED_INSTRUMENTS)
+
+    # Allow generating a single instrument: python generate.py piano
+    if len(sys.argv) > 1:
+        instruments = [name for name in sys.argv[1:] if name in INSTRUMENTS]
+        if not instruments:
+            print(f"Unknown instrument(s): {sys.argv[1:]}")
+            print(f"Available: {', '.join(all_instruments)}")
+            sys.exit(1)
+    else:
+        instruments = all_instruments
 
     # OP-XY multisampled presets
     os.makedirs(OPXY_DIR, exist_ok=True)

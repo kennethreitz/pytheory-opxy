@@ -86,63 +86,63 @@
   "platform": "OP-XY",
   "regions": [
     {
-      "framecount": 132300,
+      "framecount": 357283,
       "hikey": 42,
       "lokey": 0,
       "pitch.keycenter": 36,
       "reverse": false,
       "sample": "c2.wav",
-      "sample.end": 132300,
+      "sample.end": 357283,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 357215,
       "hikey": 54,
       "lokey": 43,
       "pitch.keycenter": 48,
       "reverse": false,
       "sample": "c3.wav",
-      "sample.end": 132300,
+      "sample.end": 357215,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 357245,
       "hikey": 64,
       "lokey": 55,
       "pitch.keycenter": 60,
       "reverse": false,
       "sample": "c4.wav",
-      "sample.end": 132300,
+      "sample.end": 357245,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 357382,
       "hikey": 70,
       "lokey": 65,
       "pitch.keycenter": 69,
       "reverse": false,
       "sample": "a4.wav",
-      "sample.end": 132300,
+      "sample.end": 357382,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 357409,
       "hikey": 78,
       "lokey": 71,
       "pitch.keycenter": 72,
       "reverse": false,
       "sample": "c5.wav",
-      "sample.end": 132300,
+      "sample.end": 357409,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 357426,
       "hikey": 127,
       "lokey": 79,
       "pitch.keycenter": 84,
       "reverse": false,
       "sample": "c6.wav",
-      "sample.end": 132300,
+      "sample.end": 357426,
       "tune": 0
     }
   ],

@@ -44,7 +44,7 @@
     "amp": {
       "attack": 0,
       "decay": 0,
-      "release": 2000,
+      "release": 12000,
       "sustain": 32767
     },
     "filter": {
@@ -86,63 +86,63 @@
   "platform": "OP-XY",
   "regions": [
     {
-      "framecount": 132300,
+      "framecount": 266188,
       "hikey": 42,
       "lokey": 0,
       "pitch.keycenter": 36,
       "reverse": false,
       "sample": "c2.wav",
-      "sample.end": 132300,
+      "sample.end": 266188,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 282661,
       "hikey": 54,
       "lokey": 43,
       "pitch.keycenter": 48,
       "reverse": false,
       "sample": "c3.wav",
-      "sample.end": 132300,
+      "sample.end": 282661,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 260045,
       "hikey": 64,
       "lokey": 55,
       "pitch.keycenter": 60,
       "reverse": false,
       "sample": "c4.wav",
-      "sample.end": 132300,
+      "sample.end": 260045,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 269398,
       "hikey": 70,
       "lokey": 65,
       "pitch.keycenter": 69,
       "reverse": false,
       "sample": "a4.wav",
-      "sample.end": 132300,
+      "sample.end": 269398,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 290835,
       "hikey": 78,
       "lokey": 71,
       "pitch.keycenter": 72,
       "reverse": false,
       "sample": "c5.wav",
-      "sample.end": 132300,
+      "sample.end": 290835,
       "tune": 0
     },
     {
-      "framecount": 132300,
+      "framecount": 261105,
       "hikey": 127,
       "lokey": 79,
       "pitch.keycenter": 84,
       "reverse": false,
       "sample": "c6.wav",
-      "sample.end": 132300,
+      "sample.end": 261105,
       "tune": 0
     }
   ],

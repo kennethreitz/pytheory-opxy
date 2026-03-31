@@ -2,7 +2,12 @@
 
 ## 2026-03-31
 
-- Removed all looping — `loop.onrelease` was still causing infinite sustain on some instruments. Amp envelope now handles everything: full sustain while held, quick release (2000) on key up. Sustained instruments use 8s samples so they don't run out.
+- Removed all looping — `loop.onrelease` was still causing infinite sustain on some instruments. Amp envelope now handles everything
+- Short note (8th) + long tail for natural decay; sustained instruments get a whole note
+- Silence trimming: samples auto-trimmed to last audible frame + 100ms fade
+- Per-instrument amp release: resonant instruments (vibes, piano, bells, plucked strings) get long release (12000), others get quick cutoff (2000)
+- More instruments promoted to 8s samples: all bowed strings, winds, brass, sustained synths, sitar, piano, mallet instruments
+- Single instrument generation: `python generate.py sitar`
 - Restored distortion guitars (crunch, distorted, orange_crunch, metal) — fixed in PyTheory v0.40.4
 - Refined per-instrument behavior:
   - Legato (mono + portamento): theremin, didgeridoo, vocal, acid_bass, 808_bass, pedal_steel, singing_bowls, harmonium, bagpipe, synth_lead
