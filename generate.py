@@ -19,13 +19,45 @@ OPXY_DIR = os.path.join(os.path.dirname(__file__), "opxy-samples", "pytheory")
 OP1_DIR = os.path.join(os.path.dirname(__file__), "op1-samples", "pytheory")
 
 # Instruments that should be monophonic (not polyphonic)
+# Monophonic instruments (no polyphony, but no glide)
 MONO_INSTRUMENTS = {
-    "theremin", "flute", "clarinet", "oboe", "bassoon", "trumpet",
+    "flute", "clarinet", "oboe", "bassoon", "trumpet",
     "trombone", "french_horn", "tuba", "saxophone", "alto_sax",
-    "tenor_sax", "bari_sax", "didgeridoo", "bagpipe",
-    "bass_guitar", "upright_bass", "synth_bass", "acid_bass", "808_bass",
+    "tenor_sax", "bari_sax", "bagpipe",
+    "bass_guitar", "upright_bass", "synth_bass", "808_bass",
     "contrabass",
-    "synth_lead", "vocal",
+    "synth_lead",
+}
+
+# Legato instruments (mono + portamento glide)
+LEGATO_INSTRUMENTS = {
+    "theremin", "didgeridoo", "vocal", "acid_bass",
+    "pedal_steel", "singing_bowl", "singing_bowl_ring",
+}
+
+# Instruments that need looping to sustain while held
+# (continuous/bowed/blown sounds that don't naturally decay)
+LOOP_INSTRUMENTS = {
+    # Bowed strings
+    "violin", "viola", "cello", "contrabass", "string_ensemble",
+    # Wind/blown
+    "theremin", "didgeridoo", "bagpipe", "pipe_organ", "organ",
+    "harmonium", "accordion", "flute", "clarinet", "oboe", "bassoon",
+    "trumpet", "trombone", "french_horn", "tuba", "brass_ensemble",
+    "saxophone", "alto_sax", "tenor_sax", "bari_sax",
+    # Sustained synths
+    "synth_pad", "synth_lead", "synth_bass", "acid_bass",
+    "choir", "vocal", "granular_pad", "granular_texture",
+    # Resonant
+    "singing_bowl_ring",
+}
+
+# Instruments that need longer samples (slow attack/decay)
+LONG_SAMPLE_INSTRUMENTS = {
+    "singing_bowl", "singing_bowl_ring", "tubular_bells",
+    "granular_pad", "granular_texture", "synth_pad",
+    "string_ensemble", "choir", "pipe_organ",
+    "timpani", "crash",  # long tails
 }
 
 # Sample points: (note_name, midi_number)
@@ -43,8 +75,14 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
     """Render a single note using the given instrument preset.
 
     Returns mono float32 numpy array.
+    Long-decay instruments get 8 seconds, others get 3.
     """
-    score = Score("4/4", bpm=80)
+    if instrument_name in LONG_SAMPLE_INSTRUMENTS:
+        bpm = 30  # 4 beats at 30 bpm = 8 seconds
+    else:
+        bpm = 80  # 4 beats at 80 bpm = 3 seconds
+
+    score = Score("4/4", bpm=bpm)
     part = score.part("inst", instrument=instrument_name)
     part.add(Tone.from_string(note), Duration.WHOLE)
 
@@ -72,12 +110,13 @@ def save_wav(path: str, samples: np.ndarray):
         wf.writeframes(pcm.tobytes())
 
 
-def build_regions(sample_files):
+def build_regions(sample_files, instrument_name: str):
     """Build OP-XY sampler regions matching the factory preset format.
 
-    Key ranges split at midpoints. Loop near the tail of the sample
-    with loop.onrelease=true so notes stop on key release.
+    Key ranges split at midpoints. Looping instruments get a sustain
+    loop in the middle of the sample. All get loop.onrelease=true.
     """
+    should_loop = instrument_name in LOOP_INSTRUMENTS
     regions = []
     for i, (filename, midi, framecount) in enumerate(sample_files):
         if i == 0:
@@ -92,15 +131,23 @@ def build_regions(sample_files):
             next_midi = sample_files[i + 1][1]
             hikey = (midi + next_midi) // 2
 
-        # Loop near the tail (like factory presets)
-        loop_start = framecount * 9 // 10
-        loop_end = framecount
+        if should_loop:
+            # Loop the middle 60% of the sample for sustained sounds
+            loop_start = framecount // 5
+            loop_end = framecount * 4 // 5
+            crossfade = max(1, framecount // 20)  # ~5% crossfade
+        else:
+            # Non-looping: loop near tail (factory style)
+            loop_start = framecount * 9 // 10
+            loop_end = framecount
+            crossfade = max(1, framecount // 100)
 
         regions.append({
             "framecount": framecount,
             "hikey": hikey,
             "lokey": lokey,
-            "loop.crossfade": max(1, framecount // 100),
+            "loop.crossfade": crossfade,
+            "loop.enabled": should_loop,
             "loop.end": loop_end,
             "loop.onrelease": True,
             "loop.start": loop_start,
@@ -116,7 +163,15 @@ def build_regions(sample_files):
 
 def make_patch_json(regions: list, instrument_name: str) -> dict:
     """Build an OP-XY multisampler patch.json matching factory format."""
-    playmode = "mono" if instrument_name in MONO_INSTRUMENTS else "poly"
+    if instrument_name in LEGATO_INSTRUMENTS:
+        playmode = "mono"
+        portamento = 8000  # smooth glide
+    elif instrument_name in MONO_INSTRUMENTS:
+        playmode = "mono"
+        portamento = 0
+    else:
+        playmode = "poly"
+        portamento = 0
 
     return {
         "engine": {
@@ -130,7 +185,7 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
             },
             "params": [16384, 16384, 16384, 16384, 16384, 16384, 16384, 16384],
             "playmode": playmode,
-            "portamento.amount": 0,
+            "portamento.amount": portamento,
             "portamento.type": 32767,
             "transpose": 0,
             "tuning.root": 0,
@@ -185,7 +240,7 @@ def generate_preset(name: str, output_dir: str):
         sample_files.append((wav_name, midi, framecount))
         total_kb += os.path.getsize(wav_path) / 1024
 
-    regions = build_regions(sample_files)
+    regions = build_regions(sample_files, name)
     patch = make_patch_json(regions, name)
 
     with open(os.path.join(preset_dir, "patch.json"), "w") as f:
