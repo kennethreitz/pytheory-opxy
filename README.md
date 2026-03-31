@@ -14,27 +14,42 @@ Every sound is rendered from scratch — no samples were harmed in the making of
 
 ---
 
-## Quick Start
+## Getting the Presets
 
-1. [**Download the zip**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) (~130 MB)
-2. Copy to your device:
+Click the green **"Code"** button at the top of this page, then **"Download ZIP"**.
 
-| Device | What to copy | Where to put it |
-|--------|-------------|-----------------|
-| **OP-XY** | `opxy-samples/pytheory/` | `/presets/pytheory/` |
-| **OP-XY** | `opxy-samples/pytheory-drums/` | `/presets/pytheory-drums/` |
-| **OP-1 / OP-1 Field** | `op1-samples/pytheory/*.wav` | `/synth/user/` |
+Or use this direct link: [**Download ZIP**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) (~200 MB)
 
-OP-XY users: [Field Kit](https://teenage.engineering/apps/field-kit) makes managing presets easy.
+Unzip the file — you'll get a folder called `pytheory-opxy-main` with everything inside.
+
+---
+
+## Installing on Your OP-XY
+
+1. Open [**Field Kit**](https://teenage.engineering/apps/field-kit) on your Mac (free from Teenage Engineering)
+2. Connect your OP-XY via USB-C
+3. In Field Kit, navigate to the **presets** folder on your device
+4. Drag these folders from the unzipped download into the presets folder:
+   - `opxy-samples/pytheory/` — all 69 instruments
+   - `opxy-samples/pytheory-drums/` — all 12 drum kits
+5. They'll appear in the OP-XY preset browser right away
+
+## Installing on Your OP-1 / OP-1 Field
+
+1. Connect your OP-1 via USB and enter **disk mode** (TE > USB Disk)
+2. It will show up as a drive on your computer
+3. Open the `synth/user/` folder on the OP-1 drive
+4. Copy the `.wav` files from `op1-samples/pytheory/` into it
+5. Eject the OP-1 and load the samples in the Sampler synth engine
 
 ---
 
 ## Instruments
 
 69 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
-Playmode, looping, and sample length are set per instrument — legato for theremin and
-didgeridoo, mono for winds and brass, looping for bowed strings and sustained sounds,
-longer samples for instruments with slow decays.
+Each instrument is configured with appropriate playmode and release behavior —
+legato with glide for theremin and didgeridoo, mono for winds and brass,
+long release for resonant instruments like piano and vibraphone.
 
 ```
   Keys         piano, electric_piano, wurlitzer, pipe_organ, organ,
@@ -65,12 +80,12 @@ longer samples for instruments with slow decays.
 
 ## Drum Kits
 
-12 drum kits, up to 24 hits each, mapped to OP-XY drum keys 53–76.
+12 drum kits, up to 24 hits each, mapped to OP-XY drum keys 53-76.
 
 ```
   standard     24 sounds   full GM kit
   latin        20 sounds   congas, bongos, timbales, agogo, guiro
-  metal        12 sounds   tight kick/snare/hat + toms & cymbals
+  metal        14 sounds   tight kick/snare/hat + toms & cymbals
   marching     14 sounds   snare, quads, 5 bass drums, crash
   world        15 sounds   djembe, doumbek, cajon, rainstick
   tabla         7 sounds   na, tin, ge, dha, tit, ke, ge_bend
@@ -84,13 +99,18 @@ longer samples for instruments with slow decays.
 
 ---
 
-## Regenerating
+## For Developers
+
+Want to regenerate the samples yourself or tweak the presets?
 
 ```
 pip install pytheory numpy scipy
-python generate.py           # instruments
-python generate_drums.py     # drum kits
+python generate.py                # all instruments
+python generate.py piano sitar    # just specific ones
+python generate_drums.py          # all drum kits
 ```
+
+See [opxy-preset-notes.md](opxy-preset-notes.md) for documentation on the OP-XY preset format.
 
 ---
 
