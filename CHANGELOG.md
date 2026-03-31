@@ -2,10 +2,7 @@
 
 ## 2026-03-31
 
-- Loop points now snap to zero crossings in the audio for click-free looping
-- Removed `loop.enabled` field (was causing notes to sustain forever — factory presets only use `loop.onrelease`)
-- Faster amp release (2000 vs 7841) so notes cut off quickly on key up
-- Crossfade set to 10% of loop length for smooth sustain
+- Removed all looping — `loop.onrelease` was still causing infinite sustain on some instruments. Amp envelope now handles everything: full sustain while held, quick release (2000) on key up. Sustained instruments use 8s samples so they don't run out.
 - Restored distortion guitars (crunch, distorted, orange_crunch, metal) — fixed in PyTheory v0.40.4
 - Refined per-instrument behavior:
   - Legato (mono + portamento): theremin, didgeridoo, vocal, acid_bass, 808_bass, pedal_steel, singing_bowls, harmonium, bagpipe, synth_lead
