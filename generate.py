@@ -81,6 +81,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "orange_crunch": -1,
     "metal_guitar": -1,
     "glockenspiel": 1,
+    "music_box": 1,
     "tuba": -1,
     "timpani": -1,
 }
