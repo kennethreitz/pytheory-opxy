@@ -83,7 +83,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "french_horn": 1,
     "mandolin": 1,
     "glockenspiel": 1,
-    "theremin": 1,
+    "theremin": 2,
     "tingsha": 3,
     "vibraphone": 2,
     "viola": -1,
