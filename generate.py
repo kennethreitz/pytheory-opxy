@@ -60,9 +60,7 @@ LONG_SAMPLE_INSTRUMENTS = {
 }
 
 
-EXCLUDED_INSTRUMENTS = {
-    "saxophone", "alto_sax", "tenor_sax", "bari_sax",
-}
+EXCLUDED_INSTRUMENTS = set()
 
 # Default octave offset for instruments that sit in a low register
 LOW_OCTAVE_INSTRUMENTS = {

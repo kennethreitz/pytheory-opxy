@@ -32,7 +32,7 @@ You'll need [**Field Kit**](https://teenage.engineering/apps/field-kit), a free 
 3. Your OP-XY will show up in Field Kit — click on it
 4. Open the **presets** folder on your device
 5. From the `pytheory-opxy-main` folder you downloaded, drag these into the presets folder:
-   - `opxy-samples/pytheory/` — all 65 instruments
+   - `opxy-samples/pytheory/` — all 69 instruments
    - `opxy-samples/pytheory-drums/` — all 12 drum kits
 6. Done! The presets will show up on your OP-XY right away
 
@@ -51,7 +51,7 @@ You'll need [**Field Kit**](https://teenage.engineering/apps/field-kit), a free 
 
 ## Instruments
 
-65 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
+69 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
 Sustained instruments (strings, winds, organ, pads) loop seamlessly while you hold a key
 and release when you let go. Plucked and percussive instruments play through naturally.
 
@@ -61,7 +61,8 @@ and release when you let go. Plucked and percussive instruments play through nat
 
   Strings      violin, viola, cello, contrabass, string_ensemble
 
-  Woodwinds    flute, clarinet, oboe, bassoon
+  Woodwinds    flute, clarinet, oboe, bassoon, saxophone,
+               alto_sax, tenor_sax, bari_sax
 
   Brass        trumpet, trombone, french_horn, tuba, brass_ensemble
 
