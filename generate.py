@@ -79,6 +79,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "orange_crunch": -1,
     "metal_guitar": -1,
     "crotales": 2,
+    "flute": 2,
     "glockenspiel": 1,
     "theremin": 1,
     "tingsha": 3,

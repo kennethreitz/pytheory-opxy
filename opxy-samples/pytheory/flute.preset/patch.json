@@ -82,7 +82,7 @@
     ],
     "type": "tremolo"
   },
-  "octave": 0,
+  "octave": 2,
   "platform": "OP-XY",
   "regions": [
     {
@@ -159,10 +159,10 @@
       "framecount": 105840,
       "hikey": 127,
       "lokey": 0,
-      "loop.crossfade": 22909,
-      "loop.end": 88606,
+      "loop.crossfade": 14241,
+      "loop.end": 67902,
       "loop.onrelease": true,
-      "loop.start": 19879,
+      "loop.start": 25178,
       "pitch.keycenter": 84,
       "reverse": false,
       "sample": "c6.wav",
