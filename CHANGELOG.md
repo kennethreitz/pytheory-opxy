@@ -2,6 +2,11 @@
 
 ## 2026-03-31
 
+- RMS-matched looping for sustained instruments — loop points found by analyzing audio energy to match levels at both boundaries, snapped to zero crossings, with 33% crossfade. Sustained instruments gate on key release via `loop.onrelease`
+- Non-looped instruments explicitly set `loop.enabled: false` — without this, the OP-XY multisampler loops the full sample by default
+- Two amp envelopes: sustained (full sustain + release for gate) and non-looped (PatchStudio decay envelope)
+- Confirmed `"multisampler"` type is correct for multi-zone presets (from TE docs: "sampler" = single sample, "multisampler" = up to 24 zones)
+- `loop.onrelease` means "continue looping after release" — opposite of what it sounds like. Use it on sustained instruments (with loop points) so the OP-XY loops while held and plays through on release
 - Uniform rendering: whole note at 100 bpm + 3 whole rests of tail, auto-trimmed to last audible frame
 - No looping — amp envelope handles sustain/release entirely
 - Per-instrument amp release: long (12000) for resonant sounds (piano, vibes, bells, plucked strings), short (2000) for everything else
