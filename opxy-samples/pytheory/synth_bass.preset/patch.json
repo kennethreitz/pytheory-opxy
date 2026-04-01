@@ -114,17 +114,17 @@
       "tune": 0
     },
     {
-      "framecount": 11188,
+      "framecount": 11187,
       "hikey": 64,
       "lokey": 0,
       "loop.crossfade": 0,
-      "loop.end": 11188,
+      "loop.end": 11187,
       "loop.onrelease": true,
       "loop.start": 0,
       "pitch.keycenter": 60,
       "reverse": false,
       "sample": "c4.wav",
-      "sample.end": 11188,
+      "sample.end": 11187,
       "tune": 0
     },
     {

@@ -86,31 +86,31 @@
   "platform": "OP-XY",
   "regions": [
     {
-      "framecount": 43770,
+      "framecount": 43777,
       "hikey": 42,
       "lokey": 0,
       "loop.crossfade": 0,
-      "loop.end": 43770,
+      "loop.end": 43777,
       "loop.onrelease": true,
       "loop.start": 0,
       "pitch.keycenter": 36,
       "reverse": false,
       "sample": "c2.wav",
-      "sample.end": 43770,
+      "sample.end": 43777,
       "tune": 0
     },
     {
-      "framecount": 43950,
+      "framecount": 43955,
       "hikey": 54,
       "lokey": 0,
       "loop.crossfade": 0,
-      "loop.end": 43950,
+      "loop.end": 43955,
       "loop.onrelease": true,
       "loop.start": 0,
       "pitch.keycenter": 48,
       "reverse": false,
       "sample": "c3.wav",
-      "sample.end": 43950,
+      "sample.end": 43955,
       "tune": 0
     },
     {

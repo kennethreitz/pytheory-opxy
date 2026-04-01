@@ -112,10 +112,12 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
     else:
         part = score.part("inst", instrument=instrument_name)
     part.add(Tone.from_string(note), Duration.WHOLE)
-    # Let the tail ring out
-    part.rest(Duration.WHOLE)
-    part.rest(Duration.WHOLE)
-    part.rest(Duration.WHOLE)
+
+    if instrument_name not in LOOP_INSTRUMENTS:
+        # Non-looped: let the tail ring out for natural decay
+        part.rest(Duration.WHOLE)
+        part.rest(Duration.WHOLE)
+        part.rest(Duration.WHOLE)
 
     buf = render_score(score)  # float32 stereo (N, 2)
 
@@ -200,31 +202,57 @@ def _find_zero_crossing(samples, target, direction=1):
 def _find_loop_points(samples):
     """Find RMS-matched, zero-crossing-snapped loop points in the sustain region.
 
-    Searches for the pair of points where energy levels match best,
-    ensuring a smooth loop with no volume jump.
+    First finds where the actual signal is (above 25% of peak energy),
+    then searches within that region for matching RMS levels.
     """
     fc = len(samples)
-    # Search in the sustain body (0.3s to 2.2s or 80% of sample, whichever is less)
-    search_start = int(SAMPLE_RATE * 0.15)  # 150ms in (past attack)
-    search_end = min(int(SAMPLE_RATE * 9), fc * 9 // 10)  # up to 9s or 90%
+    window = 2205  # 50ms
+    step = 441    # 10ms
 
-    if search_end - search_start < SAMPLE_RATE:
-        # Sample too short for meaningful loop
+    # Find peak RMS and the region where signal is above 25% of peak
+    peak_rms = 0.0
+    for pos in range(0, fc - window, step):
+        r = _rms_at(samples, pos, window)
+        if r > peak_rms:
+            peak_rms = r
+
+    if peak_rms < 0.01:
         return 0, fc, 0
 
-    step = 441  # 10ms steps
-    min_loop = SAMPLE_RATE  # minimum 1s loop
+    threshold = peak_rms * 0.25
+    signal_start = 0
+    signal_end = fc
+
+    for pos in range(0, fc - window, step):
+        if _rms_at(samples, pos, window) > threshold:
+            signal_start = pos
+            break
+
+    for pos in range(fc - window, 0, -step):
+        if _rms_at(samples, pos, window) > threshold:
+            signal_end = pos
+            break
+
+    # Search within the signal region, skip the first 150ms (attack)
+    search_start = max(signal_start + int(SAMPLE_RATE * 0.15), int(SAMPLE_RATE * 0.15))
+    search_end = signal_end
+
+    if search_end - search_start < SAMPLE_RATE // 2:
+        return 0, fc, 0
+
+    min_loop = SAMPLE_RATE // 2  # minimum 0.5s loop
 
     best_diff = 999.0
     best_pair = (search_start, search_end)
 
-    # Prefer longer loops — weight the RMS diff by inverse loop length
-    for s in range(search_start, search_end // 3, step):
+    for s in range(search_start, (search_start + search_end) // 2, step):
         s_rms = _rms_at(samples, s)
-        if s_rms < 0.01:  # skip silence
+        if s_rms < threshold:
             continue
-        for e in range(search_end, search_end * 2 // 3, -step):
+        for e in range(search_end, (search_start + search_end) // 2, -step):
             e_rms = _rms_at(samples, e)
+            if e_rms < threshold:
+                continue
             diff = abs(s_rms - e_rms)
             if diff < best_diff and (e - s) > min_loop:
                 best_diff = diff
