@@ -147,12 +147,90 @@ def save_wav(path: str, samples: np.ndarray):
         wf.writeframes(pcm.tobytes())
 
 
+# Sustained instruments that should loop (gate on key release via loop.onrelease)
+LOOP_INSTRUMENTS = {
+    # Bowed strings
+    "violin", "viola", "cello", "contrabass", "string_ensemble",
+    # Wind/blown
+    "flute", "clarinet", "oboe", "bassoon", "trumpet",
+    "trombone", "french_horn", "tuba", "brass_ensemble",
+    "bagpipe", "didgeridoo",
+    # Keys/bellows
+    "organ", "pipe_organ", "harmonium", "accordion",
+    # Sustained synths
+    "synth_pad", "synth_lead", "synth_bass", "acid_bass", "808_bass",
+    "choir", "vocal", "granular_pad", "granular_texture",
+    # Continuous
+    "theremin", "singing_bowl_ring",
+}
+
+
+def _rms_at(samples, pos, window=2205):
+    """RMS energy in a 50ms window around pos."""
+    chunk = samples[max(0, pos - window // 2):pos + window // 2]
+    if len(chunk) == 0:
+        return 0.0
+    return float(np.sqrt(np.mean(chunk ** 2)))
+
+
+def _find_zero_crossing(samples, target, direction=1):
+    """Find nearest positive-going zero crossing."""
+    n = len(samples)
+    for offset in range(4410):
+        idx = target + offset * direction
+        if 0 < idx < n - 1:
+            if samples[idx - 1] <= 0 < samples[idx]:
+                return idx
+    return target
+
+
+def _find_loop_points(samples):
+    """Find RMS-matched, zero-crossing-snapped loop points in the sustain region.
+
+    Searches for the pair of points where energy levels match best,
+    ensuring a smooth loop with no volume jump.
+    """
+    fc = len(samples)
+    # Search in the sustain body (0.3s to 2.2s or 80% of sample, whichever is less)
+    search_start = int(SAMPLE_RATE * 0.3)
+    search_end = min(int(SAMPLE_RATE * 2.2), fc * 4 // 5)
+
+    if search_end - search_start < SAMPLE_RATE // 2:
+        # Sample too short for meaningful loop
+        return 0, fc, 0
+
+    step = 441  # 10ms steps
+    min_loop = SAMPLE_RATE // 2  # minimum 0.5s loop
+
+    best_diff = 999.0
+    best_pair = (search_start, search_end)
+
+    for s in range(search_start, (search_start + search_end) // 2, step):
+        s_rms = _rms_at(samples, s)
+        if s_rms < 0.01:  # skip silence
+            continue
+        for e in range(search_end, (search_start + search_end) // 2, -step):
+            e_rms = _rms_at(samples, e)
+            diff = abs(s_rms - e_rms)
+            if diff < best_diff and (e - s) > min_loop:
+                best_diff = diff
+                best_pair = (s, e)
+
+    s, e = best_pair
+    s = _find_zero_crossing(samples, s, 1)
+    e = _find_zero_crossing(samples, e, -1)
+    crossfade = (e - s) // 3  # 33% of loop length
+
+    return s, e, crossfade
+
+
 def build_regions(sample_files, instrument_name: str):
     """Build OP-XY multisampler regions.
 
-    Uses lokey=0 stacking (OP-XY picks highest hikey match).
-    Matches factory multisampler format with loop fields present but disabled.
+    Uses lokey=0 stacking. Sustained instruments get RMS-matched loop
+    points with loop.onrelease for gate behavior.
     """
+    should_loop = instrument_name in LOOP_INSTRUMENTS
     regions = []
     for i, (filename, midi, framecount, *_rest) in enumerate(sample_files):
         if i == len(sample_files) - 1:
@@ -161,15 +239,30 @@ def build_regions(sample_files, instrument_name: str):
             next_midi = sample_files[i + 1][1]
             hikey = (midi + next_midi) // 2
 
+        if should_loop and len(_rest) > 0:
+            samples = _rest[0]
+            loop_start, loop_end, crossfade = _find_loop_points(samples)
+            region_loop = {
+                "loop.crossfade": crossfade,
+                "loop.end": loop_end,
+                "loop.onrelease": True,
+                "loop.start": loop_start,
+            }
+        else:
+            # Non-looped: loop.enabled=false, like factory ambguitar
+            region_loop = {
+                "loop.crossfade": 0,
+                "loop.enabled": False,
+                "loop.end": framecount,
+                "loop.onrelease": False,
+                "loop.start": 0,
+            }
+
         regions.append({
             "framecount": framecount,
             "hikey": hikey,
             "lokey": 0,
-            "loop.crossfade": 0,
-            "loop.enabled": False,
-            "loop.end": framecount,
-            "loop.onrelease": False,
-            "loop.start": 0,
+            **region_loop,
             "pitch.keycenter": midi,
             "reverse": False,
             "sample": filename,
@@ -181,11 +274,13 @@ def build_regions(sample_files, instrument_name: str):
 
 
 def _amp_envelope(instrument_name: str) -> dict:
-    """Return amp envelope. Multisampler doesn't gate on key release,
-    so decay shapes the note and sustain sets the held level."""
-    # Default: PatchStudio multisampler envelope
-    # decay to ~46% then hold — works for everything
-    return {"attack": 0, "decay": 20295, "release": 16383, "sustain": 14989}
+    """Return amp envelope."""
+    if instrument_name in LOOP_INSTRUMENTS:
+        # Looping instruments: full sustain, release fades on key up
+        return {"attack": 0, "decay": 2457, "release": 14395, "sustain": 32767}
+    else:
+        # Non-looping: PatchStudio default decay envelope
+        return {"attack": 0, "decay": 20295, "release": 16383, "sustain": 14989}
 
 
 def make_patch_json(regions: list, instrument_name: str) -> dict:
@@ -249,13 +344,15 @@ def make_patch_json(regions: list, instrument_name: str) -> dict:
 
 
 def update_patch(name: str, output_dir: str):
-    """Update only the patch.json for an existing preset (no audio regen)."""
+    """Update only the patch.json for an existing preset (no audio regen).
+
+    Reads WAV data for loop point analysis on sustained instruments.
+    """
     preset_dir = os.path.join(output_dir, f"{name}.preset")
     if not os.path.isdir(preset_dir):
         print(f"  {name:24s}  SKIP (no preset folder)", flush=True)
         return
 
-    # Read framecount from existing WAVs
     sample_files = []
     for note, midi in SAMPLE_POINTS:
         wav_name = f"{note.lower()}.wav"
@@ -265,7 +362,9 @@ def update_patch(name: str, output_dir: str):
             return
         with wave.open(wav_path, "r") as wf:
             framecount = wf.getnframes()
-        sample_files.append((wav_name, midi, framecount))
+            raw = wf.readframes(framecount)
+            samples = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32767
+        sample_files.append((wav_name, midi, framecount, samples))
 
     regions = build_regions(sample_files, name)
     patch = make_patch_json(regions, name)
@@ -273,7 +372,8 @@ def update_patch(name: str, output_dir: str):
     with open(os.path.join(preset_dir, "patch.json"), "w") as f:
         json.dump(patch, f, indent=2)
 
-    print(f"  {name:24s}  patch.json updated", flush=True)
+    looped = " (looped)" if name in LOOP_INSTRUMENTS else ""
+    print(f"  {name:24s}  patch.json updated{looped}", flush=True)
 
 
 def generate_preset(name: str, output_dir: str):
