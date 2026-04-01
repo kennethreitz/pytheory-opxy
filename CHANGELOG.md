@@ -5,7 +5,8 @@
 - Looped instruments rendered without reverb tail — just clean sustain (2.4s)
 - Loop analysis constrained to signal body (>25% peak RMS) to avoid looping silence
 - Restored saxophones (saxophone, alto_sax, tenor_sax, bari_sax)
-- Octave adjustments: bari_sax -1, bass_guitar -2, cello -1, all guitars -1, glockenspiel +1
+- Octave adjustments: bari_sax -1, bass_guitar -2, cello -1, viola -1, all guitars -1, glockenspiel +1, music_box +1, theremin +1, vibraphone +2, tingsha +3
+- Sitar and singing bowls back to poly
 - 808_bass override: sustained sine + pad envelope instead of pytheory's pluck
 - Upgraded to PyTheory v0.40.6
 
