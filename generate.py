@@ -81,6 +81,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "crotales": 2,
     "flute": 2,
     "french_horn": 1,
+    "mandolin": 1,
     "glockenspiel": 1,
     "theremin": 1,
     "tingsha": 3,
