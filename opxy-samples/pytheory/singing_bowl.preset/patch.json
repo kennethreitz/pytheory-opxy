@@ -30,8 +30,8 @@
       16384,
       16384
     ],
-    "playmode": "mono",
-    "portamento.amount": 8000,
+    "playmode": "poly",
+    "portamento.amount": 0,
     "portamento.type": 32767,
     "transpose": 0,
     "tuning.root": 0,

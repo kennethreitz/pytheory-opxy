@@ -27,14 +27,12 @@ MONO_INSTRUMENTS = {
     "tenor_sax", "bari_sax",
     # Bass (fingered)
     "bass_guitar", "upright_bass", "synth_bass", "contrabass",
-    # Solo strings
-    "sitar",
 }
 
 # Legato instruments (mono + portamento glide)
 LEGATO_INSTRUMENTS = {
     "theremin", "didgeridoo", "vocal", "acid_bass", "808_bass",
-    "pedal_steel", "singing_bowl", "singing_bowl_ring",
+    "pedal_steel",
     "synth_lead",
 }
 
@@ -81,6 +79,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "orange_crunch": -1,
     "metal_guitar": -1,
     "glockenspiel": 1,
+    "theremin": 1,
     "music_box": 1,
     "tuba": -1,
     "timpani": -1,
