@@ -73,6 +73,13 @@ LOW_OCTAVE_INSTRUMENTS = {
     "acid_bass": -1,
     "808_bass": -2,
     "cello": -1,
+    "acoustic_guitar": -1,
+    "electric_guitar": -1,
+    "clean_guitar": -1,
+    "crunch_guitar": -1,
+    "distorted_guitar": -1,
+    "orange_crunch": -1,
+    "metal_guitar": -1,
     "tuba": -1,
     "timpani": -1,
 }

@@ -82,7 +82,7 @@
     ],
     "type": "tremolo"
   },
-  "octave": 0,
+  "octave": -1,
   "platform": "OP-XY",
   "regions": [
     {
