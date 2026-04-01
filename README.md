@@ -16,40 +16,44 @@ Every sound is rendered from scratch — no samples were harmed in the making of
 
 ## Getting the Presets ⬇️
 
-Click the green **"Code"** button at the top of this page, then **"Download ZIP"**.
-
-Or use this direct link: [**Download ZIP**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) (~200 MB)
-
-Unzip the file — you'll get a folder called `pytheory-opxy-main` with everything inside.
+1. Click this link: [**Download ZIP**](https://github.com/kennethreitz/pytheory-opxy/archive/refs/heads/main.zip) (~200 MB)
+2. Your browser will download a file called `pytheory-opxy-main.zip`
+3. Double-click the zip file to unzip it (on Mac it will unzip automatically)
+4. You'll see a folder called `pytheory-opxy-main` — that's everything
 
 ---
 
 ## Installing on Your OP-XY
 
-1. Open [**Field Kit**](https://teenage.engineering/apps/field-kit) on your Mac (free from Teenage Engineering)
-2. Connect your OP-XY via USB-C
-3. In Field Kit, navigate to the **presets** folder on your device
-4. Drag these folders from the unzipped download into the presets folder:
-   - `opxy-samples/pytheory/` — all 69 instruments
+You'll need [**Field Kit**](https://teenage.engineering/apps/field-kit), a free app from Teenage Engineering for managing presets on your OP-XY.
+
+1. Download and open **Field Kit** on your Mac
+2. Plug your OP-XY into your Mac with a USB-C cable
+3. Your OP-XY will show up in Field Kit — click on it
+4. Open the **presets** folder on your device
+5. From the `pytheory-opxy-main` folder you downloaded, drag these into the presets folder:
+   - `opxy-samples/pytheory/` — all 65 instruments
    - `opxy-samples/pytheory-drums/` — all 12 drum kits
-5. They'll appear in the OP-XY preset browser right away
+6. Done! The presets will show up on your OP-XY right away
 
 ## Installing on Your OP-1 / OP-1 Field
 
-1. Connect your OP-1 via USB and enter **disk mode** (TE > USB Disk)
-2. It will show up as a drive on your computer
-3. Open the `synth/user/` folder on the OP-1 drive
-4. Copy the `.wav` files from `op1-samples/pytheory/` into it
-5. Eject the OP-1 and load the samples in the Sampler synth engine
+1. Plug your OP-1 into your computer with a USB cable
+2. On the OP-1, go to **TE > USB Disk** to enter disk mode
+3. Your OP-1 will show up as a drive on your computer (like a USB stick)
+4. Open the `synth` > `user` folder on the OP-1 drive
+5. From the `pytheory-opxy-main` folder you downloaded, open `op1-samples/pytheory/`
+6. Copy all the `.wav` files into the OP-1's `synth/user/` folder
+7. Eject the OP-1 drive and exit disk mode
+8. Load the samples using the **Sampler** synth engine on the OP-1
 
 ---
 
 ## Instruments
 
 65 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
-Each instrument is configured with appropriate playmode and release behavior —
-legato with glide for theremin and didgeridoo, mono for winds and brass,
-long release for resonant instruments like piano and vibraphone.
+Sustained instruments (strings, winds, organ, pads) loop seamlessly while you hold a key
+and release when you let go. Plucked and percussive instruments play through naturally.
 
 ```
   Keys         piano, electric_piano, wurlitzer, pipe_organ, organ,
@@ -79,7 +83,7 @@ long release for resonant instruments like piano and vibraphone.
 
 ## Drum Kits
 
-12 drum kits, up to 24 hits each, mapped to OP-XY drum keys 53-76.
+12 drum kits, up to 24 hits each, mapped to OP-XY drum keys 53–76.
 
 ```
   standard     24 sounds   full GM kit
@@ -106,10 +110,11 @@ Want to regenerate the samples yourself or tweak the presets?
 pip install pytheory numpy scipy
 python generate.py                # all instruments
 python generate.py piano sitar    # just specific ones
+python generate.py --patch        # update patch.json only (no audio regen)
 python generate_drums.py          # all drum kits
 ```
 
-See [opxy-preset-notes.md](opxy-preset-notes.md) for documentation on the OP-XY preset format.
+See [opxy-preset-notes.md](opxy-preset-notes.md) for detailed documentation on the OP-XY preset format — what we learned about loop behavior, region fields, envelope settings, and more.
 
 ---
 
