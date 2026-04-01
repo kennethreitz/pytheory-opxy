@@ -59,51 +59,81 @@ to cover gaps between zones.
 
 ---
 
-## Key Limitation: Multisampler Has No Gate
+## Multisampler Gate Behavior
 
-This is the most important thing to understand. The `"multisampler"` type
-**does not stop playback on key release**. The sample plays through
-regardless of whether you're holding the key or not.
+The multisampler does **not** gate on key release by default — samples play
+through to completion. There are two approaches depending on instrument type:
 
-The `"sampler"` type does gate, but only supports a single sample.
+### Sustained instruments (looped)
 
-**Workaround:** Use amp envelope `decay` to shape notes so they
-naturally fade. The [OP-PatchStudio](https://github.com/ish-/te-opxy-patchstudio)
-default envelope works well:
+Use `loop.onrelease: true` with loop points in the sustain body. The OP-XY
+loops while the key is held. On key release, it plays through the remainder
+of the sample (past the loop end) and the amp `release` fades it out.
+
+**Critical:** Loop points must have matching RMS energy levels at start and
+end to avoid volume jumps. Use large crossfades (~33% of loop length).
 
 ```json
-"amp": {"attack": 0, "decay": 20295, "sustain": 14989, "release": 16383}
+"amp": {"attack": 0, "decay": 2457, "release": 14395, "sustain": 32767}
 ```
 
-This makes notes hit at full volume, decay to ~46%, and hold there.
+### Non-looped instruments (plucked, percussive)
+
+Set `loop.enabled: false` explicitly. Without this field, the OP-XY loops
+the full sample by default. Use the PatchStudio decay envelope to shape notes:
+
+```json
+"amp": {"attack": 0, "decay": 20295, "release": 16383, "sustain": 14989}
+```
 
 ---
 
 ## Region Fields
 
-### Multisampler regions
+### Sustained (looped) multisampler region
 
 ```json
 {
-  "framecount": 132300,
+  "framecount": 110250,
+  "hikey": 54,
+  "lokey": 0,
+  "loop.crossfade": 21723,
+  "loop.end": 88731,
+  "loop.onrelease": true,
+  "loop.start": 18683,
+  "pitch.keycenter": 48,
+  "reverse": false,
+  "sample": "c3.wav",
+  "sample.end": 110250,
+  "tune": 0
+}
+```
+
+Loop points are found by analyzing audio RMS energy to match levels at
+both boundaries, then snapped to positive-going zero crossings.
+
+### Non-looped multisampler region
+
+```json
+{
+  "framecount": 110250,
   "hikey": 54,
   "lokey": 0,
   "loop.crossfade": 0,
   "loop.enabled": false,
-  "loop.end": 132300,
+  "loop.end": 110250,
   "loop.onrelease": false,
   "loop.start": 0,
   "pitch.keycenter": 48,
   "reverse": false,
   "sample": "c3.wav",
-  "sample.end": 132300,
+  "sample.end": 110250,
   "tune": 0
 }
 ```
 
-**`loop.onrelease`** means "continue looping after key release" — the
-opposite of what you might expect. Setting it to `true` makes notes
-sustain forever. Leave it `false`.
+**`loop.enabled: false`** must be present — without it the OP-XY loops
+the entire sample.
 
 ### Drum regions
 
