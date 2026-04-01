@@ -80,6 +80,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "distorted_guitar": -1,
     "orange_crunch": -1,
     "metal_guitar": -1,
+    "glockenspiel": 1,
     "tuba": -1,
     "timpani": -1,
 }
