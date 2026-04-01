@@ -80,6 +80,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "metal_guitar": -1,
     "crotales": 2,
     "flute": 2,
+    "french_horn": 1,
     "glockenspiel": 1,
     "theremin": 1,
     "tingsha": 3,
