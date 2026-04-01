@@ -192,24 +192,25 @@ def _find_loop_points(samples):
     """
     fc = len(samples)
     # Search in the sustain body (0.3s to 2.2s or 80% of sample, whichever is less)
-    search_start = int(SAMPLE_RATE * 0.3)
-    search_end = min(int(SAMPLE_RATE * 2.2), fc * 4 // 5)
+    search_start = int(SAMPLE_RATE * 0.15)  # 150ms in (past attack)
+    search_end = min(int(SAMPLE_RATE * 9), fc * 9 // 10)  # up to 9s or 90%
 
-    if search_end - search_start < SAMPLE_RATE // 2:
+    if search_end - search_start < SAMPLE_RATE:
         # Sample too short for meaningful loop
         return 0, fc, 0
 
     step = 441  # 10ms steps
-    min_loop = SAMPLE_RATE // 2  # minimum 0.5s loop
+    min_loop = SAMPLE_RATE  # minimum 1s loop
 
     best_diff = 999.0
     best_pair = (search_start, search_end)
 
-    for s in range(search_start, (search_start + search_end) // 2, step):
+    # Prefer longer loops — weight the RMS diff by inverse loop length
+    for s in range(search_start, search_end // 3, step):
         s_rms = _rms_at(samples, s)
         if s_rms < 0.01:  # skip silence
             continue
-        for e in range(search_end, (search_start + search_end) // 2, -step):
+        for e in range(search_end, search_end * 2 // 3, -step):
             e_rms = _rms_at(samples, e)
             diff = abs(s_rms - e_rms)
             if diff < best_diff and (e - s) > min_loop:
