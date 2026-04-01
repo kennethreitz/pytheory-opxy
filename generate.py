@@ -72,6 +72,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "synth_bass": -1,
     "acid_bass": -1,
     "808_bass": -2,
+    "cello": -1,
     "tuba": -1,
     "timpani": -1,
 }
