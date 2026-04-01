@@ -117,6 +117,8 @@ python generate_drums.py          # all drum kits
 
 See [opxy-preset-notes.md](opxy-preset-notes.md) for detailed documentation on the OP-XY preset format — what we learned about loop behavior, region fields, envelope settings, and more.
 
+See [CHANGELOG.md](CHANGELOG.md) for what's changed.
+
 ---
 
 Built with [PyTheory](https://github.com/kennethreitz/pytheory) by [Kenneth Reitz](https://github.com/kennethreitz).
