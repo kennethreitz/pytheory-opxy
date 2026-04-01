@@ -97,7 +97,12 @@ def render_note(instrument_name: str, note: str) -> np.ndarray:
     bpm = 100  # whole note = 2.4s, plus tail rests for decay
 
     score = Score("4/4", bpm=bpm)
-    part = score.part("inst", instrument=instrument_name)
+    if instrument_name == "808_bass":
+        # Override: 808 needs a sustained sine, not a pluck
+        part = score.part("inst", synth="sine", envelope="pad",
+                          lowpass=200, sub_osc=0.5, distortion=0.4)
+    else:
+        part = score.part("inst", instrument=instrument_name)
     part.add(Tone.from_string(note), Duration.WHOLE)
     # Let the tail ring out
     part.rest(Duration.WHOLE)
