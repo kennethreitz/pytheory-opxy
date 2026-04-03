@@ -6,7 +6,8 @@
 - 83 total instruments (up from 69)
 - Categorized all new instruments into metadata sets (mono/legato/loop/long_sample/octave offset)
 - Upgraded to PyTheory v0.40.9 (local editable install via uv)
-- Fixed looping on pluck-envelope synths (analog_bass, sync_lead, sync_lead_bright) — play through naturally instead of looping silence
+- Fixed looping on pluck-envelope synths (analog_bass, sync_lead, sync_lead_bright, synth_bass, synth_lead) — play through naturally instead of looping silence
+- Audited all LOOP_INSTRUMENTS: only sustained envelopes (organ, pad, strings, bowed) are looped
 
 ## 2026-04-01
 
