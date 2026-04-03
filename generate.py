@@ -195,7 +195,6 @@ LOOP_INSTRUMENTS = {
     "synth_pad", "synth_lead", "synth_bass", "acid_bass", "808_bass",
     "choir", "vocal", "granular_pad", "granular_texture",
     "analog_pad", "drift_saw", "drift_square", "wavefold_warm",
-    "sync_lead", "sync_lead_bright", "analog_bass",
     # Continuous
     "theremin", "singing_bowl_ring",
 }
