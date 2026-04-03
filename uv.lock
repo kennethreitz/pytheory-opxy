@@ -276,17 +276,27 @@ wheels = [
 
 [[package]]
 name = "pytheory"
-version = "0.40.4"
-source = { registry = "https://pypi.org/simple" }
+version = "0.40.9"
+source = { editable = "../pytheory" }
 dependencies = [
     { name = "rich" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "sounddevice" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/38/e2/7b07f904e997c20a1ed7d96353e9fc7283e436681afcce5eb84d5b4aa06d/pytheory-0.40.4.tar.gz", hash = "sha256:b1cb2eebc27e6851aa179de2ccb5fc056bfeb9a49e11ea71ba16f99e61b96b2f", size = 181686, upload-time = "2026-03-31T11:08:28.097Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c2/c1/6237f31343ad843bfc844bc565409ec967ac2eff08ab3ec859a9fc810b1b/pytheory-0.40.4-py3-none-any.whl", hash = "sha256:52f896aa0640ac79209e03b50fbe88f98c327d8d59c74b045b262ba38d207ab9", size = 185779, upload-time = "2026-03-31T11:08:26.767Z" },
+
+[package.metadata]
+requires-dist = [
+    { name = "rich", specifier = ">=14.3.3" },
+    { name = "scipy" },
+    { name = "sounddevice" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest" }]
+docs = [
+    { name = "myst-parser" },
+    { name = "sphinx" },
 ]
 
 [[package]]
@@ -304,7 +314,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "pytheory" },
+    { name = "pytheory", editable = "../pytheory" },
     { name = "scipy" },
 ]
 

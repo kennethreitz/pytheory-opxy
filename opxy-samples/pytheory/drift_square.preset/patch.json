@@ -1,0 +1,175 @@
+{
+  "engine": {
+    "bendrange": 8191,
+    "highpass": 0,
+    "modulation": {
+      "aftertouch": {
+        "amount": 16383,
+        "target": 0
+      },
+      "modwheel": {
+        "amount": 16383,
+        "target": 0
+      },
+      "pitchbend": {
+        "amount": 16383,
+        "target": 0
+      },
+      "velocity": {
+        "amount": 16383,
+        "target": 0
+      }
+    },
+    "params": [
+      16384,
+      16384,
+      16384,
+      16384,
+      16384,
+      16384,
+      16384,
+      16384
+    ],
+    "playmode": "poly",
+    "portamento.amount": 0,
+    "portamento.type": 32767,
+    "transpose": 0,
+    "tuning.root": 0,
+    "tuning.scale": 0,
+    "velocity.sensitivity": 26541,
+    "volume": 20082,
+    "width": 0
+  },
+  "envelope": {
+    "amp": {
+      "attack": 0,
+      "decay": 2457,
+      "release": 14395,
+      "sustain": 32767
+    },
+    "filter": {
+      "attack": 0,
+      "decay": 9471,
+      "release": 0,
+      "sustain": 32767
+    }
+  },
+  "fx": {
+    "active": false,
+    "params": [
+      24002,
+      0,
+      0,
+      30719,
+      0,
+      32767,
+      0,
+      0
+    ],
+    "type": "ladder"
+  },
+  "lfo": {
+    "active": false,
+    "params": [
+      6212,
+      16865,
+      18344,
+      16000,
+      0,
+      0,
+      0,
+      0
+    ],
+    "type": "tremolo"
+  },
+  "octave": 0,
+  "platform": "OP-XY",
+  "regions": [
+    {
+      "framecount": 105840,
+      "hikey": 42,
+      "lokey": 0,
+      "loop.crossfade": 11359,
+      "loop.end": 77403,
+      "loop.onrelease": true,
+      "loop.start": 43325,
+      "pitch.keycenter": 36,
+      "reverse": false,
+      "sample": "c2.wav",
+      "sample.end": 105840,
+      "tune": 0
+    },
+    {
+      "framecount": 105840,
+      "hikey": 54,
+      "lokey": 0,
+      "loop.crossfade": 19911,
+      "loop.end": 82793,
+      "loop.onrelease": true,
+      "loop.start": 23059,
+      "pitch.keycenter": 48,
+      "reverse": false,
+      "sample": "c3.wav",
+      "sample.end": 105840,
+      "tune": 0
+    },
+    {
+      "framecount": 105840,
+      "hikey": 64,
+      "lokey": 0,
+      "loop.crossfade": 19831,
+      "loop.end": 68784,
+      "loop.onrelease": true,
+      "loop.start": 9289,
+      "pitch.keycenter": 60,
+      "reverse": false,
+      "sample": "c4.wav",
+      "sample.end": 105840,
+      "tune": 0
+    },
+    {
+      "framecount": 105840,
+      "hikey": 70,
+      "lokey": 0,
+      "loop.crossfade": 15418,
+      "loop.end": 58191,
+      "loop.onrelease": true,
+      "loop.start": 11937,
+      "pitch.keycenter": 69,
+      "reverse": false,
+      "sample": "a4.wav",
+      "sample.end": 105840,
+      "tune": 0
+    },
+    {
+      "framecount": 105840,
+      "hikey": 78,
+      "lokey": 0,
+      "loop.crossfade": 21007,
+      "loop.end": 82450,
+      "loop.onrelease": true,
+      "loop.start": 19427,
+      "pitch.keycenter": 72,
+      "reverse": false,
+      "sample": "c5.wav",
+      "sample.end": 105840,
+      "tune": 0
+    },
+    {
+      "framecount": 105840,
+      "hikey": 127,
+      "lokey": 0,
+      "loop.crossfade": 10578,
+      "loop.end": 63497,
+      "loop.onrelease": true,
+      "loop.start": 31763,
+      "pitch.keycenter": 84,
+      "reverse": false,
+      "sample": "c6.wav",
+      "sample.end": 105840,
+      "tune": 0
+    }
+  ],
+  "type": "multisampler",
+  "version": 4
+}

@@ -8,3 +8,6 @@ dependencies = [
     "numpy",
     "scipy",
 ]
+
+[tool.uv.sources]
+pytheory = { path = "../pytheory", editable = true }

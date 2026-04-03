@@ -27,6 +27,8 @@ MONO_INSTRUMENTS = {
     "tenor_sax", "bari_sax",
     # Bass (fingered)
     "bass_guitar", "upright_bass", "synth_bass", "contrabass",
+    # Synth mono leads
+    "sync_lead", "sync_lead_bright", "analog_bass",
 }
 
 # Legato instruments (mono + portamento glide)
@@ -42,9 +44,14 @@ LONG_SAMPLE_INSTRUMENTS = {
     # Long natural decay
     "singing_bowl", "singing_bowl_ring", "tubular_bells",
     "crotales", "tingsha", "steel_drum",
+    "ring_mod_bell", "ring_mod_metallic", "koto",
     # Slow pads / textures
     "granular_pad", "granular_texture", "synth_pad",
     "string_ensemble", "choir", "pipe_organ",
+    "analog_pad", "drift_saw", "drift_square",
+    "wavefold_warm",
+    # Mellotron (tape-based, sustained)
+    "mellotron", "mellotron_strings", "mellotron_flute", "mellotron_choir",
     # Resonant instruments
     "timpani", "vibraphone", "marimba", "xylophone",
     "glockenspiel", "celesta", "music_box", "kalimba", "harp",
@@ -54,7 +61,8 @@ LONG_SAMPLE_INSTRUMENTS = {
     "theremin", "didgeridoo", "vocal", "harmonium", "bagpipe",
     "accordion", "organ", "808_bass", "acid_bass",
     "violin", "viola", "cello", "contrabass",
-    "synth_lead", "synth_bass",
+    "synth_lead", "synth_bass", "analog_bass",
+    "sync_lead", "sync_lead_bright",
 }
 
 
@@ -70,6 +78,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "synth_bass": -1,
     "acid_bass": -1,
     "808_bass": -2,
+    "analog_bass": -1,
     "cello": -1,
     "acoustic_guitar": -1,
     "electric_guitar": -1,
@@ -78,6 +87,7 @@ LOW_OCTAVE_INSTRUMENTS = {
     "distorted_guitar": -1,
     "orange_crunch": -1,
     "metal_guitar": -1,
+    "mandola": -1,
     "crotales": 2,
     "flute": 2,
     "french_horn": 1,
@@ -179,9 +189,13 @@ LOOP_INSTRUMENTS = {
     "bagpipe", "didgeridoo",
     # Keys/bellows
     "organ", "pipe_organ", "harmonium", "accordion",
+    # Mellotron (tape playback, sustained)
+    "mellotron", "mellotron_strings", "mellotron_flute", "mellotron_choir",
     # Sustained synths
     "synth_pad", "synth_lead", "synth_bass", "acid_bass", "808_bass",
     "choir", "vocal", "granular_pad", "granular_texture",
+    "analog_pad", "drift_saw", "drift_square", "wavefold_warm",
+    "sync_lead", "sync_lead_bright", "analog_bass",
     # Continuous
     "theremin", "singing_bowl_ring",
 }

@@ -32,7 +32,7 @@ You'll need [**Field Kit**](https://teenage.engineering/apps/field-kit), a free 
 3. Your OP-XY will show up in Field Kit — click on it
 4. Open the **presets** folder on your device
 5. From the `pytheory-opxy-main` folder you downloaded, drag these into the presets folder:
-   - `opxy-samples/pytheory/` — all 69 instruments
+   - `opxy-samples/pytheory/` — all 83 instruments
    - `opxy-samples/pytheory-drums/` — all 12 drum kits
 6. Done! The presets will show up on your OP-XY right away
 
@@ -51,7 +51,7 @@ You'll need [**Field Kit**](https://teenage.engineering/apps/field-kit), a free 
 
 ## Instruments
 
-69 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
+83 multisampled instruments, each with 6 samples across the keyboard (C2, C3, C4, A4, C5, C6).
 Sustained instruments (strings, winds, organ, pads) loop seamlessly while you hold a key
 and release when you let go. Plucked and percussive instruments play through naturally.
 
@@ -76,8 +76,14 @@ and release when you let go. Plucked and percussive instruments play through nat
                tubular_bells, timpani, crotales, tingsha,
                singing_bowl, singing_bowl_ring, kalimba, steel_drum
 
+  Mellotron    mellotron, mellotron_strings, mellotron_flute,
+               mellotron_choir
+
   Synths       synth_lead, synth_pad, synth_bass, acid_bass,
-               granular_pad, granular_texture, vocal, choir, 808_bass
+               granular_pad, granular_texture, vocal, choir, 808_bass,
+               sync_lead, sync_lead_bright, analog_pad, analog_bass,
+               drift_saw, drift_square, wavefold_warm, wavefold_gnarly,
+               ring_mod_bell, ring_mod_metallic
 
   Other        theremin, harmonium, accordion, didgeridoo, bagpipe
 ```
@@ -108,11 +114,11 @@ and release when you let go. Plucked and percussive instruments play through nat
 Want to regenerate the samples yourself or tweak the presets?
 
 ```
-pip install pytheory numpy scipy
-python generate.py                # all instruments
-python generate.py piano sitar    # just specific ones
-python generate.py --patch        # update patch.json only (no audio regen)
-python generate_drums.py          # all drum kits
+uv sync                           # install dependencies
+uv run python generate.py                # all instruments
+uv run python generate.py piano sitar    # just specific ones
+uv run python generate.py --patch        # update patch.json only (no audio regen)
+uv run python generate_drums.py          # all drum kits
 ```
 
 See [opxy-preset-notes.md](opxy-preset-notes.md) for detailed documentation on the OP-XY preset format — what we learned about loop behavior, region fields, envelope settings, and more.

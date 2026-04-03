@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-02
+
+- 14 new instruments: analog_bass, analog_pad, drift_saw, drift_square, mellotron, mellotron_choir, mellotron_flute, mellotron_strings, ring_mod_bell, ring_mod_metallic, sync_lead, sync_lead_bright, wavefold_gnarly, wavefold_warm
+- 83 total instruments (up from 69)
+- Categorized all new instruments into metadata sets (mono/legato/loop/long_sample/octave offset)
+- Upgraded to PyTheory v0.40.9 (local editable install via uv)
+
 ## 2026-04-01
 
 - Looped instruments rendered without reverb tail — just clean sustain (2.4s)
