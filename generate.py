@@ -192,7 +192,7 @@ LOOP_INSTRUMENTS = {
     # Mellotron (tape playback, sustained)
     "mellotron", "mellotron_strings", "mellotron_flute", "mellotron_choir",
     # Sustained synths
-    "synth_pad", "synth_lead", "synth_bass", "acid_bass", "808_bass",
+    "synth_pad", "acid_bass", "808_bass",
     "choir", "vocal", "granular_pad", "granular_texture",
     "analog_pad", "drift_saw", "drift_square", "wavefold_warm",
     # Continuous
